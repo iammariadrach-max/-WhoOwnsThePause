@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { advanceCover, coverShouldStop, CURSOR_IDLE_MS } from '../src/hooks/coverMotion.ts';
-test('cursor braking reaches exact rest in 0.8 seconds, without resetting phase', () => {
+import { advanceCover, coverShouldStop } from '../src/hooks/coverMotion.ts';
+test('button braking reaches exact rest in 0.8 seconds, without resetting phase', () => {
   const half = advanceCover({phase: 42, speed: 1}, .4, true);
   assert.equal(half.speed, .5);
   assert.equal(half.phase, 42.3);
@@ -15,16 +15,16 @@ test('resume continues from the frozen phase and takes 0.8 seconds', () => {
   assert.equal(end.speed, 1);
   assert.ok(Math.abs(end.phase - 42.8) < 1e-10);
 });
-test('repeated cursor movement extends rest; idle permits resuming after 1300 ms', () => {
-  const idleAt = 1000 + CURSOR_IDLE_MS;
-  assert.equal(coverShouldStop(false, false, false, idleAt - 1, idleAt), true);
-  assert.equal(coverShouldStop(false, false, false, idleAt, idleAt), false);
-  assert.equal(coverShouldStop(false, false, false, idleAt, idleAt + 1000), true);
+test('manual pause remains at rest for any duration until the button resumes it', () => {
+  const stopped = advanceCover({phase: 23, speed: 1}, .8, true);
+  assert.deepEqual(advanceCover(stopped, 60, true), stopped);
+  assert.equal(coverShouldStop(false, false, false), false);
+  assert.ok(advanceCover(stopped, .4, false).phase > stopped.phase);
 });
-test('manual, reduced-motion and page pause always dominate pointer inactivity', () => {
-  assert.equal(coverShouldStop(true, false, false, 10000, 0), true);
-  assert.equal(coverShouldStop(false, true, false, 10000, 0), true);
-  assert.equal(coverShouldStop(false, false, true, 10000, 0), true);
+test('manual, reduced-motion and whole-page pause each stop the field', () => {
+  assert.equal(coverShouldStop(true, false, false), true);
+  assert.equal(coverShouldStop(false, true, false), true);
+  assert.equal(coverShouldStop(false, false, true), true);
 });
 test('braking then changing direction has no speed or phase jump', () => {
   const slow = advanceCover({phase: 10, speed: 1}, .3, true);

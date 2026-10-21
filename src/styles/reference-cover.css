@@ -40,16 +40,26 @@ body { font-weight: 500; font-synthesis: none; }
   min-height: 600px;
   padding: 0;
   margin: 0;
-  overflow: hidden;
+  overflow: clip;
   background: transparent;
   isolation: auto;
 }
 .cover-field { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
 .cover-field i { display: block; position: absolute; pointer-events: none; will-change: transform; }
+.cover-wash {
+  inset: -30px;
+  background: radial-gradient(ellipse 52% 34% at 48% 16.25%, #4b5655 15%, #424d4c 35%, #2d3635 65%, transparent 100%), linear-gradient(180deg, #4b5352 0%, #4a5352 10.5%, transparent 25.6%);
+  filter: blur(20px);
+}
 .cover-haze {
   inset: -30px;
-  background: radial-gradient(ellipse 27% 20% at 50% 35.8%, #4b4b4b80 0%, #3f3f4066 40%, transparent 85%), radial-gradient(ellipse 50% 34% at 48% 16.25%, #444b4b 15%, #3b4443 35%, #26302e 65%, transparent 100%), linear-gradient(180deg, #424848 0%, #414948 10.5%, transparent 25.6%);
-  filter: blur(20px);
+  background: radial-gradient(ellipse 27% 20% at 50% 35.8%, #5b64629c 0%, #4d525078 40%, transparent 85%);
+  filter: blur(22px);
+}
+.cover-edge {
+  inset: -30px;
+  background: radial-gradient(ellipse 26% 9% at 82% 26%, #6c797334 0%, #53615b1a 55%, transparent 100%);
+  filter: blur(22px);
 }
 .cover-shadow {
   inset: 0;
@@ -58,8 +68,15 @@ body { font-weight: 500; font-synthesis: none; }
 }
 .cover-strip {
   inset: -2%;
-  background: radial-gradient(ellipse 29% 4.2% at 55% 58.9%, #5c645e 0%, #575f58de 30%, #464b43a6 62%, transparent 100%), radial-gradient(ellipse 48% 20% at 55% 60%, #54483f88 0%, #45372b55 60%, transparent 100%);
+  background: radial-gradient(ellipse 28% 4% at 54% 57.8%, #646d68 0%, #5e6862de 30%, #4d544ca6 62%, transparent 100%), radial-gradient(ellipse 48% 20% at 55% 60%, #5a4b4088 0%, #4c3c2f55 60%, transparent 100%);
   filter: blur(13px);
+}
+.cover-dots {
+  position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background-image: radial-gradient(circle, #0009 0 0.85px, #0003 1.05px, transparent 1.4px), radial-gradient(circle, #0009 0 0.85px, #0003 1.05px, transparent 1.4px);
+  background-size: 6px 6px;
+  background-position: 0 0, 3px 3px;
+  opacity: .42;
 }
 #root .hero :is(.hero-eyebrow, .hero-subtitle) {
   position: absolute; z-index: 2; top: 3.45cqh; margin: 0; padding: 0;
@@ -128,7 +145,7 @@ body { font-weight: 500; font-synthesis: none; }
   .chapter-rail i { width: 3px; height: 3px; }
   .chapter-rail a[aria-current] i { height: 15px; }
   .rail-number { right: 26px; font-size: 9px; background: #181917; padding: 3px; }
-  .cover-haze { inset: -20% -65% 0; }
+  .cover-wash, .cover-haze, .cover-edge { inset: -20% -65% 0; }
   .cover-strip { left: -60%; right: -50%; }
 }
 @media (prefers-reduced-motion: reduce) {

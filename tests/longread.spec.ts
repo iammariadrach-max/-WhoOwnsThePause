@@ -1,5 +1,43 @@
 import { test, expect } from "@playwright/test";
 
+test("cover motion only responds to the button and the dot screen stays still", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await page.goto("/");
+  const field = page.locator(".cover-field");
+  const button = page.locator(".cover-motion");
+  const dots = page.locator(".cover-dots");
+  await expect(field).toHaveAttribute("data-speed", "1.000");
+  await expect(dots).toHaveCount(1);
+  await expect(dots).toHaveCSS("pointer-events", "none");
+  await expect(dots).toHaveCSS("transform", "none");
+  const pattern = await dots.evaluate((element) => getComputedStyle(element).backgroundPosition);
+  for (const [x, y] of [[250, 200], [650, 300], [1100, 210], [480, 400]]) {
+    await page.mouse.move(x, y, { steps: 10 });
+    await expect(field).toHaveAttribute("data-motion", "drifting");
+    await expect(field).toHaveAttribute("data-speed", "1.000");
+  }
+  await button.click();
+  await expect(button).toHaveAttribute("aria-pressed", "true");
+  expect(await page.locator(".hero").evaluate((element) => element.scrollTop)).toBe(0);
+  await expect(field).toHaveAttribute("data-speed", "0.000");
+  const phase = await field.getAttribute("data-phase");
+  await page.mouse.move(500, 300, { steps: 15 });
+  // The previous cursor-idle behavior resumed after 1.3s; button pause must persist.
+  await page.waitForTimeout(1700);
+  await expect(field).toHaveAttribute("data-phase", phase!);
+  await expect(field).toHaveAttribute("data-motion", "manual");
+  await button.press("Enter");
+  await expect(field).toHaveAttribute("data-speed", "1.000");
+  await expect.poll(async () => Number(await field.getAttribute("data-phase"))).toBeGreaterThan(Number(phase));
+  await expect(dots).toHaveCSS("background-position", pattern);
+  await expect(dots).toHaveCSS("transform", "none");
+  await page.setViewportSize({ width: 390, height: 844 });
+  await button.click();
+  await expect(field).toHaveAttribute("data-speed", "0.000");
+  await button.click();
+  await expect(field).toHaveAttribute("data-speed", "1.000");
+});
+
 test("all fifteen zones, responsive layouts, navigation, sources and reload", async ({
   page,
 }, info) => {
