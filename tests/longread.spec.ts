@@ -87,8 +87,12 @@ test("control bridge permits skip and its deadline enables continue", async ({
     bridge.getByRole("button", { name: "Продолжить", exact: true }),
   ).toBeEnabled();
   await bridge.getByRole("button", { name: "Продолжить", exact: true }).click();
-  await bridge.getByRole("radio", { name: "Разницы почти не было" }).check();
-  await expect(bridge).toContainText("Это ещё и вопрос контроля");
+  // Selecting an answer replaces the question, so assert the resulting screen
+  // rather than the checked state of a radio that has already been unmounted.
+  await bridge.getByRole("radio", { name: "Разницы почти не было" }).click();
+  await expect(bridge.getByRole("status")).toContainText(
+    "Это ещё и вопрос контроля",
+  );
 });
 
 test("A/B/C each use ten seconds, pause between variants, choices persist", async ({
