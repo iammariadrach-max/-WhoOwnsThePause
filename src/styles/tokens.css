@@ -1,0 +1,64 @@
+:root {
+  --color-black: #050505;
+  --color-near-black: #0b0b0b;
+  --color-white: #fff;
+  --color-paper: #f1f0eb;
+  --color-paper-soft: #e9e8e3;
+  --color-text-dark: #111;
+  --color-text-light: #f4f3ef;
+  --color-muted-dark: rgba(17, 17, 17, 0.55);
+  --color-muted-light: rgba(244, 243, 239, 0.55);
+  --color-line-dark: rgba(17, 17, 17, 0.18);
+  --color-line-light: rgba(255, 255, 255, 0.18);
+  --font-main: "Manrope", sans-serif;
+  --font-serif: "Cormorant", Georgia, serif;
+  --font-mono: "IBM Plex Mono", monospace;
+  --text-display: clamp(5.5rem, 11vw, 11rem);
+  --text-title: clamp(3.25rem, 6.5vw, 7rem);
+  --text-lead: clamp(1.5rem, 2.4vw, 2.4rem);
+  --text-body-large: clamp(1.35rem, 2vw, 2rem);
+  --text-body: clamp(1.0625rem, 1.35vw, 1.45rem);
+  --text-instruction: clamp(1.0625rem, 1.15vw, 1.125rem);
+  --text-status: clamp(0.875rem, 1vw, 1rem);
+  --text-caption: clamp(0.9375rem, 1vw, 1.0625rem);
+  --text-meta: clamp(0.6875rem, 0.8vw, 0.8125rem);
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-24: 96px;
+  --space-32: 128px;
+  --space-40: 160px;
+  --space-60: 240px;
+  --page-margin: clamp(20px, 5vw, 80px);
+  --grid-columns: 12;
+  --grid-gap: 24px;
+  --reading-width: 60ch;
+  --line-width: 1px;
+  --radius: 0px;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-linear: linear;
+  --duration-ui: 200ms;
+  --duration-state: 800ms;
+  --duration-ambient: 18s;
+  --z-header: 20;
+  --z-status: 30;
+  --z-dialog: 50;
+}
+@media (max-width: 1000px) {
+  :root {
+    --grid-columns: 8;
+    --grid-gap: 20px;
+  }
+}
+@media (max-width: 600px) {
+  :root {
+    --grid-columns: 4;
+    --grid-gap: 16px;
+  }
+}

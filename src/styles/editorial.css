@@ -1,0 +1,251 @@
+/* Reading roles own typography; scene styles own composition and interaction. */
+#root
+  :is(
+    .display,
+    .section-title,
+    .lead,
+    .body-large,
+    .body,
+    .body-copy,
+    .instruction,
+    .caption
+  ) {
+  font-family: var(--font-main);
+  font-style: normal;
+  white-space: normal;
+}
+#root .display {
+  font-size: var(--text-display);
+  font-weight: 500;
+  line-height: 0.9;
+  letter-spacing: -0.06em;
+}
+#root .section-title {
+  font-size: var(--text-title);
+  font-weight: 500;
+  line-height: 0.98;
+  letter-spacing: -0.045em;
+}
+#root .lead {
+  font-size: var(--text-lead);
+  line-height: 1.3;
+  letter-spacing: -0.025em;
+  max-width: 38ch;
+}
+#root .body-large {
+  font-size: var(--text-body-large);
+  font-weight: 500;
+  line-height: 1.45;
+  letter-spacing: -0.02em;
+  max-width: 46ch;
+}
+#root :is(.body, .body-copy) {
+  font-size: var(--text-body);
+  font-weight: 500;
+  line-height: 1.6;
+  letter-spacing: -0.012em;
+  max-width: var(--reading-width);
+}
+#root .instruction {
+  font-size: var(--text-instruction);
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+  max-width: 48ch;
+}
+#root .caption {
+  font-size: var(--text-caption);
+  line-height: 1.5;
+  letter-spacing: 0;
+  max-width: 54ch;
+}
+#root :is(.meta, .micro-label, .timecode) {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  font-weight: 400;
+  line-height: 1.35;
+  letter-spacing: 0.055em;
+}
+#root .system-status {
+  font-family: var(--font-mono);
+  font-size: var(--text-status);
+  line-height: 1.4;
+  letter-spacing: 0;
+}
+#root .action {
+  font-family: var(--font-main);
+  font-size: var(--text-instruction);
+  line-height: 1.4;
+  min-height: 48px;
+}
+#root .serif-accent {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 300;
+}
+#root .editorial-text {
+  display: block;
+  text-align: left;
+  text-wrap: pretty;
+}
+#root .editorial-text > :is(p, blockquote, ul, ol) {
+  margin: 0;
+  orphans: 3;
+  widows: 3;
+}
+#root
+  .editorial-text
+  > :is(p, blockquote, ul, ol)
+  + :is(p, blockquote, ul, ol) {
+  margin-top: 1em;
+}
+#root .editorial-quote {
+  padding: 0.25em 0 0.25em 1em;
+  border-left: 1px solid var(--line);
+}
+#root .editorial-list {
+  padding-left: 1.4em;
+}
+#root .editorial-list li + li {
+  margin-top: 0.4em;
+}
+#root .source-marker {
+  display: inline;
+  line-height: inherit;
+}
+
+/* One physical grain plane: above surface light, below content. */
+main,
+.longread-footer {
+  z-index: auto;
+}
+.scene-surface,
+.hero,
+.finale {
+  isolation: auto;
+}
+.scene-surface
+  > :not(
+    .hero,
+    .finale,
+    .temporal-field,
+    .poster-label,
+    .temporal-residue,
+    .overload-field
+  ),
+.hero-group,
+.hero-eyebrow,
+.finale-copy,
+.longread-footer > * {
+  position: relative;
+  z-index: 2;
+}
+.grain-overlay {
+  z-index: 1;
+  opacity: var(--grain-opacity);
+}
+html[data-active-tone="paper"] .grain-overlay {
+  opacity: 0.035;
+}
+
+.intro-body {
+  padding-block: 120px;
+}
+#root .reading-offset {
+  margin-left: 25%;
+}
+#root .rest-prose {
+  max-width: var(--reading-width);
+  font-size: var(--text-body);
+}
+.attention-memory {
+  display: block;
+  max-width: 60ch;
+  margin-left: 25%;
+}
+.responsibility-layout {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 3fr);
+  gap: 8.333%;
+  margin-right: 0;
+}
+.responsibility-margin {
+  font-family: var(--font-main);
+}
+.responsibility-margin .caption {
+  transform: none;
+  margin-left: 0;
+}
+.responsibility-labels {
+  margin-top: 64px;
+}
+.rest-prose {
+  margin-top: 80px;
+}
+.fork-text {
+  margin-top: 90px;
+}
+.progress-explanation {
+  margin-top: 90px;
+}
+.progress-conclusion {
+  margin-left: 25%;
+  margin-top: 32px;
+  color: var(--muted);
+}
+#root .comparison-instruction {
+  margin-bottom: 64px;
+}
+.style-guide-prose {
+  margin-block: 64px;
+}
+.style-guide-prose > .meta {
+  margin-bottom: 24px;
+}
+
+@media (max-width: 600px) {
+  :root {
+    --text-display: clamp(5.5rem, 23vw, 8rem);
+    --text-title: clamp(2.5rem, 10.8vw, 4rem);
+    --text-lead: clamp(1.5rem, 5.6vw, 1.8rem);
+    --text-body-large: 1.35rem;
+    --text-body: 1.0625rem;
+    --text-instruction: 1.0625rem;
+    --text-meta: 0.6875rem;
+  }
+  #root :is(.body, .body-copy, .body-large, .instruction, .lead, .caption) {
+    width: 100%;
+    max-width: none;
+  }
+  #root :is(.body, .body-copy) {
+    line-height: 1.58;
+  }
+  .intro-body {
+    padding-block: 80px;
+  }
+  .attention-memory,
+  .progress-conclusion {
+    margin-left: 0;
+  }
+  #root .reading-offset {
+    margin-left: 0;
+  }
+  #root .rest-prose {
+    width: 100%;
+    max-width: none;
+  }
+  .responsibility-layout {
+    display: block;
+    margin-top: 48px;
+  }
+  .responsibility-margin {
+    display: none;
+  }
+  .rest-prose,
+  .fork-text,
+  .progress-explanation {
+    margin-top: 56px;
+  }
+  #root .comparison-instruction {
+    margin-bottom: 40px;
+  }
+}

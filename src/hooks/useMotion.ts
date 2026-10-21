@@ -13,15 +13,22 @@ export function useReducedMotion() {
   return reduced;
 }
 
-export function useInView(ref: RefObject<HTMLElement | null>, threshold = 0.2) {
+export function useInView(
+  ref: RefObject<HTMLElement | null>,
+  threshold = 0.2,
+  once = false,
+) {
   const [visible, setVisible] = useState(false);
   useEffect(() => {
     const observer = new IntersectionObserver(
-      ([entry]) => setVisible(entry.isIntersecting),
+      ([entry]) =>
+        setVisible((previous) =>
+          once ? previous || entry.isIntersecting : entry.isIntersecting,
+        ),
       { threshold },
     );
     if (ref.current) observer.observe(ref.current);
     return () => observer.disconnect();
-  }, [ref, threshold]);
+  }, [ref, threshold, once]);
   return visible;
 }

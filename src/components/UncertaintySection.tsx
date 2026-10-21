@@ -1,107 +1,72 @@
-import { useState } from "react";
-import { Reference, SectionMarker } from "./Shared";
-
+import { useLongread } from "../state/LongreadContext";
+import { now } from "../hooks/timing";
+import { copy, chapters } from "../content/longread";
+import { PrimaryAction, SecondaryAction } from "./Actions";
+import { SectionShell, Content, goTo } from "./Shared";
 export default function UncertaintySection() {
-  const [clear, setClear] = useState(false);
+  const { state, dispatch } = useLongread();
+  const process = state.processes.background;
+  const clear = process.status !== "idle";
   return (
-    <section
-      id="uncertainty"
-      className={`uncertainty editorial-pad ${clear ? "is-clear" : ""}`}
-      aria-labelledby="uncertainty-title"
-    >
-      <SectionMarker number="04">НЕИЗВЕСТНОСТЬ</SectionMarker>
-      <div className="uncertainty-heading">
-        <h2 id="uncertainty-title">
-          Неизвестность
-          <br />
-          тоже заставляет <em>ждать</em>
-        </h2>
-        <p>
-          Представьте, что вы загружаете файл.
-          <br />
-          Интерфейс отвечает:
-        </p>
-      </div>
-      <div className="message-field">
-        <span className="field-corner corner-tl" aria-hidden="true">
-          +
-        </span>
-        <span className="field-corner corner-tr" aria-hidden="true">
-          +
-        </span>
-        <span className="field-corner corner-bl" aria-hidden="true">
-          +
-        </span>
-        <span className="field-corner corner-br" aria-hidden="true">
-          +
-        </span>
-        <div className="uncertain-questions" aria-hidden={clear}>
-          <span>Запрос принят?</span>
-          <span>Система работает?</span>
-          <span>Сколько это займёт?</span>
-          <span>Можно закрыть страницу?</span>
+    <SectionShell zone={4} className="light uncertainty">
+      <p className="lead">{chapters[3].body[0]}</p>
+      <div className={`message-field ${clear ? "is-clear" : ""}`}>
+        <div className="message-questions">
+          {copy.uncertaintyQuestions.map((text) => (
+            <p key={text} className="caption">
+              {text}
+            </p>
+          ))}
         </div>
-        <div className="status-message" aria-live="polite" aria-atomic="true">
-          {clear ? (
-            <>
-              <span className="micro status-eyebrow">
-                ЗАПРОС ПРИНЯТ / ОБРАБОТКА
-              </span>
-              <h3>Файл обрабатывается.</h3>
-              <p>
-                Обычно это занимает около минуты.
-                <br />
-                Можно закрыть окно — результат сохранится.
-              </p>
-            </>
-          ) : (
-            <>
-              <span className="micro status-eyebrow">СТАТУС НЕИЗВЕСТЕН</span>
-              <h3>Подождите.</h3>
-            </>
+        <div className="message-status" aria-live="polite" aria-atomic="true">
+          <span className="meta">
+            {clear ? "ЗАПРОС ПРИНЯТ" : "СТАТУС НЕИЗВЕСТЕН"}
+          </span>
+          <h3 className="section-title">
+            {process.status === "complete"
+              ? "Файл готов."
+              : clear
+                ? "Файл обрабатывается."
+                : "Подождите."}
+          </h3>
+          {clear && (
+            <p className="body">
+              {process.status === "complete"
+                ? "Результат сохранён в этом браузере."
+                : "Обычно это занимает около минуты. Можно закрыть окно — результат сохранится."}
+            </p>
           )}
         </div>
-        <div className="message-control">
-          <span className="micro">
-            {clear ? "ТЕПЕРЬ ПОНЯТНО, ЧТО ПРОИСХОДИТ." : "ЧТО ПРОИСХОДИТ?"}
-          </span>
-          <button
-            className="text-button"
-            onClick={() => setClear((v) => !v)}
-            aria-pressed={clear}
-          >
-            {clear ? "Вернуть неопределённость" : "Добавить ясность"}{" "}
-            <span aria-hidden="true">{clear ? "↺" : "↗"}</span>
-          </button>
+        <div className="message-actions">
+          <p className="caption">{copy.demoDuration}</p>
+          <div className="actions">
+            <PrimaryAction
+              disabled={process.status === "running"}
+              onClick={() =>
+                dispatch({
+                  type: "start",
+                  key: "background",
+                  now: now(),
+                  duration: 10000,
+                })
+              }
+            >
+              {clear
+                ? process.status === "running"
+                  ? "Обработка идёт"
+                  : "Повторить процесс"
+                : "Добавить ясность"}
+            </PrimaryAction>
+            {clear && (
+              <SecondaryAction onClick={() => goTo("comparison")}>
+                Читать дальше
+              </SecondaryAction>
+            )}
+          </div>
         </div>
       </div>
-      <div className="clarity-copy">
-        <p className="lead">
-          Скорость системы
-          <br />
-          не изменилась.
-          <br />
-          <em>
-            Но изменилась
-            <br />
-            ситуация ожидания.
-          </em>
-        </p>
-        <div className="body-copy">
-          <p>
-            Теперь понятно, что происходит, примерно сколько это займёт и нужно
-            ли оставаться у экрана.
-          </p>
-          <p>Иногда самое полезное сообщение интерфейса звучит не как:</p>
-          <p className="muted">«Подождите ещё немного».</p>
-          <p>А как:</p>
-        </div>
-      </div>
-      <p className="freedom-quote">
-        «Вам не нужно
-        <br />
-        <em>оставаться</em> здесь».<Reference>2, 4</Reference>
-      </p>
-    </section>
+      <Content part="uncertainty" className="reading-offset" />
+      <p className="body question-tail">{copy.uncertaintyPrompt}</p>
+    </SectionShell>
   );
 }

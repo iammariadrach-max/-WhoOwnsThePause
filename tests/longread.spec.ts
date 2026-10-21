@@ -1,260 +1,250 @@
 import { test, expect } from "@playwright/test";
 
-test("desktop/mobile layouts, navigation, clarity and refresh", async ({
+test("all fifteen zones, responsive layouts, navigation, sources and reload", async ({
   page,
-}, testInfo) => {
+}, info) => {
   const errors: string[] = [];
-  page.on("pageerror", (error) => errors.push(error.message));
+  page.on("pageerror", (e) => errors.push(e.message));
   page.on("console", (message) => {
-    if (message.type() === "error") errors.push(message.text());
+    if (["error", "warning"].includes(message.type()))
+      errors.push(message.text());
   });
   await page.goto("/");
   await page.evaluate(() => document.fonts.ready);
-  await expect(page.locator("main > section")).toHaveCount(6);
-  await page.screenshot({ path: testInfo.outputPath("desktop-hero.png") });
-  await page.getByRole("button", { name: "СОДЕРЖАНИЕ" }).click();
+  await expect(page.locator("main > section")).toHaveCount(15);
+  await expect(page.locator("h1")).toHaveCount(1);
+  await expect(page.locator(".chapter-rail a")).toHaveCount(15);
+  for (const [width, height] of [
+    [1440, 900],
+    [1512, 982],
+    [1920, 1080],
+    [768, 1024],
+    [390, 844],
+    [360, 800],
+  ]) {
+    await page.setViewportSize({ width, height });
+    await page.locator('.chapter-rail a[href="#opening"]').press("Enter");
+    await expect.poll(() => page.evaluate(() => scrollY)).toBe(0);
+    expect(
+      await page.evaluate(() => document.documentElement.scrollWidth),
+    ).toBeLessThanOrEqual(width);
+    const button = await page.locator(".cover-motion").boundingBox();
+    expect(button!.y + button!.height).toBeLessThan(height);
+    if ([1440, 390].includes(width))
+      await page.screenshot({ path: info.outputPath(`hero-${width}.png`) });
+  }
+  const menu = page.locator(".menu-button");
+  await menu.click();
   await expect(page.getByRole("dialog")).toBeVisible();
   await page.keyboard.press("Escape");
-  await expect(page.getByRole("dialog")).not.toBeVisible();
-  await page.getByRole("button", { name: "Добавить ясность" }).click();
-  await expect(
-    page.getByRole("heading", { name: "Файл обрабатывается." }),
-  ).toBeVisible();
-  await page.getByRole("button", { name: "Вернуть неопределённость" }).click();
-  await expect(page.getByRole("heading", { name: "Подождите." })).toBeVisible();
-  for (const width of [1920, 1440, 768, 390, 320]) {
-    await page.setViewportSize({ width, height: width < 769 ? 844 : 1000 });
-    await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
-    const overflow = await page.evaluate(() => ({
-      viewport: window.innerWidth,
-      actual: document.documentElement.scrollWidth,
-      offenders: [...document.querySelectorAll("main *")]
-        .filter(
-          (e) =>
-            e.getBoundingClientRect().right > innerWidth + 1 &&
-            getComputedStyle(e).position !== "absolute",
-        )
-        .map((e) => ({
-          tag: e.tagName,
-          cls: e.className,
-          right: e.getBoundingClientRect().right,
-        }))
-        .slice(0, 15),
-    }));
-    expect(overflow.actual, JSON.stringify(overflow)).toBeLessThanOrEqual(
-      width,
-    );
-    if (width === 390) {
-      await page.screenshot({ path: testInfo.outputPath("mobile-hero.png") });
-      await page.screenshot({
-        path: testInfo.outputPath("mobile-full.png"),
-        fullPage: true,
-      });
-    }
-  }
+  await expect(menu).toBeFocused();
+  await page.getByRole("link", { name: "Источник 1", exact: true }).click();
+  await expect(page).toHaveURL(/#source-1$/);
+  await page.locator("#source-1 .source-back").click();
+  await expect(page).toHaveURL(/#ref-/);
   await page.reload();
-  await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+  await expect(page.locator("h1")).toBeAttached();
   expect(errors).toEqual([]);
 });
 
-test("perception measures actual time, shows no running clock and resets", async ({
+test("both perception attempts use real elapsed time without running hints", async ({
   page,
 }) => {
-  await page.clock.install();
+  await page.clock.install({ time: new Date("2026-10-19T09:00:00Z") });
   await page.goto("/#perception");
-  await page.getByRole("button", { name: "Начать", exact: true }).click();
-  await expect(
-    page.getByRole("button", { name: "Остановить", exact: false }),
-  ).toBeVisible();
-  await expect(page.locator(".result-value")).toHaveCount(0);
+  await page.clock.pauseAt(new Date("2026-10-19T10:00:00Z"));
+  const first = page.locator('[data-timer="first"]');
+  await first.getByRole("button", { name: "Начать", exact: true }).click();
+  await expect(first.locator(".result-value")).toHaveCount(0);
+  await expect(first.locator(".linear-progress,.spinner")).toHaveCount(0);
   await page.clock.runFor(13400);
-  await page.getByRole("button", { name: "Остановить", exact: false }).click();
-  const firstResult = Number(
-    (await page.locator(".result-value").innerText())
-      .replace(",", ".")
-      .match(/\d+\.\d+/)?.[0],
-  );
-  expect(firstResult).toBeGreaterThanOrEqual(13.4);
-  expect(firstResult).toBeLessThan(13.8);
-  await page
-    .getByRole("button", { name: "Повторить", exact: false })
-    .first()
-    .click();
-  await expect(
-    page.getByRole("button", { name: "Начать", exact: true }),
-  ).toBeVisible();
-  await expect(page.locator(".result-value")).toHaveCount(0);
-  await page.getByRole("button", { name: "Начать", exact: true }).click();
-  await page.clock.runFor(2000);
-  await page.getByRole("button", { name: "Остановить", exact: false }).click();
-  const secondResult = Number(
-    (await page.locator(".result-value").innerText())
-      .replace(",", ".")
-      .match(/\d+\.\d+/)?.[0],
-  );
-  expect(secondResult).toBeGreaterThanOrEqual(2);
-  expect(secondResult).toBeLessThan(2.4);
+  await first.getByRole("button", { name: "Остановить", exact: true }).click();
+  await expect(first.locator(".result-value")).toContainText("13,4");
+  const second = page.locator('[data-timer="second"]');
+  await second.getByRole("button", { name: "Попробовать снова" }).click();
+  await page.clock.runFor(9000);
+  await second.getByRole("button", { name: "Остановить", exact: true }).click();
+  await expect(second).toContainText("По таймеру в начале — 13,4 с.");
+  await expect(second.locator(".result-value")).toContainText("9,0");
+  await expect(second).toContainText("не доказывают");
+  await first.getByRole("button", { name: "Повторить", exact: true }).click();
+  await expect(first.locator(".result-value")).toHaveCount(0);
 });
 
-test("A/B/C each last ten real seconds; choices persist; modes do not reset; cancel prevents completion", async ({
+test("control bridge permits skip and its deadline enables continue", async ({
   page,
 }) => {
-  await page.goto("/#comparison");
-  await page.evaluate(() => {
-    const transitions: { variant: string; time: number }[] = [];
-    Object.assign(window, { transitions });
-    let previous = "";
-    const observer = new MutationObserver(() => {
-      const variant =
-        document
-          .querySelector(".comparison-stage")
-          ?.getAttribute("data-variant") ??
-        (document.querySelector(".comparison-survey") ? "survey" : "");
-      if (variant && variant !== previous) {
-        transitions.push({ variant, time: performance.now() });
-        previous = variant;
-      }
-    });
-    observer.observe(document.querySelector(".experiment-console")!, {
-      childList: true,
-      subtree: true,
-    });
-  });
-  await page.getByRole("button", { name: "Начать сравнение" }).click();
-  await expect(page.locator(".comparison-stage")).toHaveAttribute(
-    "data-variant",
-    "А",
-  );
-  await expect(page.locator(".comparison-stage")).toHaveAttribute(
-    "data-variant",
-    "Б",
-    { timeout: 12000 },
-  );
-  await expect(page.locator(".spinner")).toBeVisible();
-  await expect(page.locator(".comparison-stage")).toHaveAttribute(
-    "data-variant",
-    "В",
-    { timeout: 12000 },
-  );
+  await page.clock.install({ time: new Date("2026-10-19T09:00:00Z") });
+  await page.goto("/#control-bridge");
+  await page.clock.pauseAt(new Date("2026-10-19T10:00:00Z"));
+  const bridge = page.locator("#control-bridge");
+  await bridge.getByRole("button", { name: "Продолжить", exact: true }).click();
   await expect(
-    page.locator(".comparison-stage .linear-progress"),
-  ).toBeVisible();
-  await expect(page.locator(".comparison-survey")).toBeVisible({
-    timeout: 12000,
-  });
-  const transitions = await page.evaluate(
-    () =>
-      (
-        window as unknown as {
-          transitions: { variant: string; time: number }[];
-        }
-      ).transitions,
-  );
-  expect(transitions.map((t) => t.variant)).toEqual(["А", "Б", "В", "survey"]);
-  for (let i = 1; i < transitions.length; i++) {
-    const elapsed = transitions[i].time - transitions[i - 1].time;
-    expect(elapsed).toBeGreaterThanOrEqual(9990);
-    expect(elapsed).toBeLessThan(10200);
+    bridge.getByRole("button", { name: "Продолжить", exact: true }),
+  ).toBeDisabled();
+  await page.clock.runFor(10000);
+  await expect(
+    bridge.getByRole("button", { name: "Продолжить", exact: true }),
+  ).toBeEnabled();
+  await bridge.getByRole("button", { name: "Продолжить", exact: true }).click();
+  await bridge.getByRole("radio", { name: "Разницы почти не было" }).check();
+  await expect(bridge).toContainText("Это ещё и вопрос контроля");
+});
+
+test("A/B/C each use ten seconds, pause between variants, choices persist", async ({
+  page,
+}) => {
+  await page.clock.install({ time: new Date("2026-10-19T09:00:00Z") });
+  await page.goto("/#comparison");
+  await page.clock.pauseAt(new Date("2026-10-19T10:00:00Z"));
+  const section = page.locator("#comparison");
+  await section
+    .getByRole("button", { name: "Начать сравнение", exact: true })
+    .click();
+  for (const [i, variant] of ["А", "Б", "В"].entries()) {
+    await expect(page.locator(".comparison-stage")).toHaveAttribute(
+      "data-variant",
+      variant,
+    );
+    await page.clock.runFor(9900);
+    await expect(page.locator(".comparison-stage")).toHaveAttribute(
+      "data-variant",
+      variant,
+    );
+    await page.clock.runFor(100);
+    await expect(page.locator(".comparison-stage")).toHaveAttribute(
+      "data-variant",
+      i === 2 ? "survey" : "between",
+    );
+    if (i < 2) {
+      await page.clock.runFor(60000);
+      await expect(page.locator(".comparison-stage")).toHaveAttribute(
+        "data-variant",
+        "between",
+      );
+      await section
+        .getByRole("button", {
+          name: `Начать вариант ${["А", "Б", "В"][i + 1]}`,
+        })
+        .click();
+    }
   }
-  console.log(
-    "Measured A/B/C intervals (ms):",
-    transitions
-      .slice(1)
-      .map((t, i) => Math.round(t.time - transitions[i].time)),
-  );
-  await page.clock.install();
   await page
     .locator(".comparison-survey fieldset")
     .nth(0)
-    .getByText("А", { exact: true })
-    .click();
+    .getByRole("radio", { name: "А", exact: true })
+    .check();
   await page
     .locator(".comparison-survey fieldset")
     .nth(1)
-    .getByText("В", { exact: true })
+    .getByRole("radio", { name: "В", exact: true })
+    .check();
+  await page
+    .getByRole("link", { name: "Кому принадлежит пауза — к началу" })
     .click();
-  await expect(page.locator(".choice-wait")).toHaveAttribute(
-    "data-status",
-    "running",
-  );
+  await expect(
+    page
+      .locator(".comparison-survey fieldset")
+      .nth(0)
+      .getByRole("radio", { name: "А", exact: true }),
+  ).toBeChecked();
+});
+
+test("background processing survives scrolling, mode changes and reload; cancellation wins", async ({
+  page,
+}) => {
+  await page.clock.install({ time: new Date("2026-10-19T09:00:00Z") });
+  await page.goto("/");
+  await page.clock.pauseAt(new Date("2026-10-19T10:00:00Z"));
+  await page.getByRole("button", { name: "Добавить ясность" }).click();
+  await page
+    .locator("#uncertainty")
+    .getByRole("button", { name: "Читать дальше" })
+    .click();
+  await page.clock.runFor(11000);
+  await expect(page.locator(".global-status")).toContainText("Файл готов.");
+  await page.reload();
+  await expect(page.locator("#uncertainty")).toContainText("Файл готов.");
+  await page
+    .getByRole("button", { name: "Запустить процесс", exact: true })
+    .click();
   await page.clock.runFor(5000);
   await page.getByRole("button", { name: "Смотреть анимацию" }).click();
   await page.clock.runFor(5000);
   await page.getByRole("button", { name: "Следить за индикатором" }).click();
-  const width = await page
-    .locator(".choice-progress")
-    .evaluate(
-      (e) =>
-        e.firstElementChild!.getBoundingClientRect().width /
-        e.getBoundingClientRect().width,
-    );
-  expect(width).toBeGreaterThan(0.48);
-  expect(width).toBeLessThan(0.55);
-  await page.getByRole("button", { name: "ПОЧЕМУ НУЖНО ЖДАТЬ?" }).click();
-  await expect(page.locator("#wait-explanation")).toBeVisible();
   await page
-    .getByRole("button", { name: "Читать дальше", exact: false })
+    .getByRole("button", { name: "Читать дальше", exact: true })
+    .last()
     .click();
   await page.clock.runFor(10100);
-  await expect(page.locator(".completion-toast")).toContainText(
-    "Готово. Процесс завершён.",
-  );
-  await expect(page.locator(".choice-wait")).toHaveAttribute(
+  await expect(page.locator(".waiting-choice")).toHaveAttribute(
     "data-status",
     "complete",
   );
-  await page.getByRole("button", { name: "Запустить снова" }).click();
-  await page.clock.runFor(1000);
-  await page.getByRole("button", { name: "ОТМЕНИТЬ ЗАПРОС" }).click();
-  await expect(page.locator(".choice-wait")).toHaveAttribute(
+  await page
+    .getByRole("button", { name: "Запустить снова", exact: true })
+    .click();
+  await page
+    .getByRole("button", { name: "Отменить запрос", exact: true })
+    .click();
+  await page.clock.runFor(30000);
+  await expect(page.locator(".waiting-choice")).toHaveAttribute(
     "data-status",
     "cancelled",
   );
-  await page.clock.runFor(21000);
-  await expect(page.locator(".choice-wait")).toHaveAttribute(
-    "data-status",
-    "cancelled",
-  );
-  await expect(page.locator(".completion-toast")).not.toHaveClass(/visible/);
 });
 
-test("mobile experiments and 99% pause work with reduced motion", async ({
+test("99% is work, countdown consequences differ, voluntary pause never traps scroll", async ({
   page,
 }) => {
-  await page.setViewportSize({ width: 390, height: 844 });
-  await page.emulateMedia({ reducedMotion: "reduce" });
-  await page.clock.install();
-  await page.goto("/#ninety-nine");
-  await page.locator(".ninety-stage").scrollIntoViewIfNeeded();
+  await page.clock.install({ time: new Date("2026-10-19T09:00:00Z") });
+  await page.goto("/");
+  await page.clock.pauseAt(new Date("2026-10-19T10:00:00Z"));
+  await page.getByRole("button", { name: "Посмотреть ожидание" }).click();
   await page.clock.runFor(1500);
   await expect(page.locator(".huge-percent")).toHaveText("99%");
   await page.clock.runFor(3000);
   await expect(page.locator(".huge-percent")).toHaveText("99%");
   await page.clock.runFor(1000);
   await expect(page.locator(".checking-label")).toContainText("Проверяем");
-  await page.getByRole("button", { name: "ПОЧУВСТВОВАТЬ ЕЩЁ РАЗ" }).click();
-  await expect(page.locator(".huge-percent")).toHaveText("99%");
-  await page.getByRole("button", { name: "Начать сравнение" }).click();
-  await page.clock.runFor(30200);
-  await expect(page.locator(".comparison-survey")).toBeVisible();
+  await page.getByRole("button", { name: "Запустить оба таймера" }).click();
+  await page.clock.runFor(10100);
+  await expect(page.locator(".countdown-display").nth(0)).toHaveText("00:00");
+  await expect(page.locator(".countdown-display").nth(1)).toHaveText("00:10");
+  await page.getByRole("button", { name: "Побыть здесь 10 секунд" }).click();
   await page
-    .locator(".comparison-survey fieldset")
-    .nth(0)
-    .getByText("Не могу сравнить", { exact: true })
+    .getByRole("button", { name: "Продолжить чтение", exact: true })
     .click();
-  await page
-    .locator(".comparison-survey fieldset")
-    .nth(1)
-    .getByText("Ни в одном", { exact: true })
-    .click();
-  await expect(page.locator(".choice-wait")).toHaveAttribute(
-    "data-status",
-    "running",
+  await page.clock.runFor(10100);
+  await expect(page.locator(".global-status")).toContainText(
+    "Десять секунд прошли.",
   );
-  await page.getByRole("button", { name: "ОТМЕНИТЬ ЗАПРОС" }).click();
-  await expect(page.locator(".choice-wait")).toHaveAttribute(
-    "data-status",
-    "cancelled",
+  await expect(page).toHaveURL(/#rest$/);
+});
+
+test("ETA, two models, mobile accordion, reduced motion and final page pause", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  await expect(page.locator(".eta-current .afterimage-original")).toHaveText("9");
+  await expect(page.locator(".eta-ghost")).toHaveText("7");
+  await expect(page.locator("html")).toHaveAttribute("data-motion", "paused");
+  await expect(page.locator(".cover-field")).toHaveAttribute("data-motion", "reduced");
+  await page.locator("#diagnostic-question-3").click();
+  await expect(page.locator("#diagnostic-answer-3")).toBeVisible();
+  await page.getByRole("button", { name: "Отменить подготовку" }).click();
+  await expect(page.locator(".diagnostic-object")).toContainText(
+    "Подготовка отменена",
+  );
+  await page.getByRole("button", { name: "Убрать всё" }).click();
+  await expect(page.locator(".overload-noise")).toHaveCount(0);
+  await page
+    .getByRole("button", { name: "Поставить страницу на паузу" })
+    .click();
+  await expect(page.locator(".page-pause")).toContainText(
+    "Эту паузу выбрали вы.",
   );
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(
     390,

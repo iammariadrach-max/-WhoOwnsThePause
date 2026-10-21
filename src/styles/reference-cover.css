@@ -1,0 +1,154 @@
+/* Reference cover, 1440 × 900. The field moves; all typography and grain stay still. */
+:root {
+  --black-0: #0c0c0b;
+  --black-1: #0c0c0b;
+  --white-soft: #c4c4ba;
+  --color-text-light: #c4c4ba;
+  --font-serif: "Cormorant", Georgia, serif;
+}
+html, body { background: var(--black-0); }
+body { font-weight: 500; font-synthesis: none; }
+#root :is(.scene-surface, .control-bridge, .part-transition, .finale, .longread-footer) {
+  --fg: #c4c4ba;
+  --bg: #0d0d0c;
+  --muted: #96988d;
+  --line: #c4c4ba38;
+  color: var(--fg);
+  background: transparent !important;
+}
+#root :is(.eta-light-leak, .exposure-transition, .optical-grid, .afterimage-copy) { display: none; }
+#root :is(.sediment-threshold, .overload-field) { background: transparent; }
+#root :is(.overload-center, .overload-center .action, .overload-noise) { --fg: #c4c4ba; --line: #c4c4ba60; color: #c4c4ba; }
+#root .responsibility-labels { color: var(--muted); }
+#root .grain-overlay {
+  background-image: url("../assets/reference-grain.png");
+  background-size: 384px 384px;
+  image-rendering: pixelated;
+  opacity: .1;
+  mix-blend-mode: normal;
+  transition: none;
+  animation: none;
+  transform: none;
+  z-index: 1;
+  pointer-events: none;
+}
+#root .hero {
+  position: relative;
+  display: block;
+  container-type: size;
+  height: 100svh;
+  min-height: 600px;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  background: transparent;
+  isolation: auto;
+}
+.cover-field { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
+.cover-field i { display: block; position: absolute; pointer-events: none; will-change: transform; }
+.cover-haze {
+  inset: -30px;
+  background: radial-gradient(ellipse 27% 20% at 50% 35.8%, #4b4b4b80 0%, #3f3f4066 40%, transparent 85%), radial-gradient(ellipse 50% 34% at 48% 16.25%, #444b4b 15%, #3b4443 35%, #26302e 65%, transparent 100%), linear-gradient(180deg, #424848 0%, #414948 10.5%, transparent 25.6%);
+  filter: blur(20px);
+}
+.cover-shadow {
+  inset: 0;
+  background: radial-gradient(ellipse 37% 19% at 8% 41%, #0d0d0c 0%, #0d0d0cd9 52%, transparent 100%), radial-gradient(ellipse 27% 20% at 97% 38%, #0d0d0c 15%, #0d0d0cb3 65%, transparent 100%);
+  filter: blur(32px);
+}
+.cover-strip {
+  inset: -2%;
+  background: radial-gradient(ellipse 29% 4.2% at 55% 58.9%, #5c645e 0%, #575f58de 30%, #464b43a6 62%, transparent 100%), radial-gradient(ellipse 48% 20% at 55% 60%, #54483f88 0%, #45372b55 60%, transparent 100%);
+  filter: blur(13px);
+}
+#root .hero :is(.hero-eyebrow, .hero-subtitle) {
+  position: absolute; z-index: 2; top: 3.45cqh; margin: 0; padding: 0;
+  color: #92978a; font: 400 11px/1.35 var(--font-mono); letter-spacing: .1px;
+}
+#root .hero-eyebrow { left: 2.778cqw; }
+#root .hero-subtitle { left: 50%; transform: translateX(-50%); width: max-content; max-width: none; text-align: center; }
+#root .cover-title { position: absolute; inset: 0; width: 100%; max-width: none; margin: 0; padding: 0; z-index: 2; font-weight: 500; color: #aaa9a3; pointer-events: none; }
+#root .cover-title > * { display: block; position: absolute; margin: 0; white-space: nowrap; text-shadow: none; animation: none; }
+#root .cover-who { left: 2.778%; top: 56.4%; font: 500 min(10.75cqw, 17.2cqh)/1 var(--font-main); letter-spacing: -.065em; }
+#root .cover-belongs { left: 14.1%; top: 65.5%; font: italic 300 min(12.2cqw, 19.52cqh)/.9 var(--font-serif); letter-spacing: -.035em; color: #74766e; }
+#root .cover-pause { left: 35.7%; top: 79.7%; font: 500 min(14.3cqw, 22.88cqh)/1 var(--font-main); letter-spacing: -.065em; }
+#root :is(.cover-forward, .cover-motion) {
+  position: absolute; bottom: 22px; z-index: 3;
+  display: flex; align-items: center; justify-content: space-between; gap: 17px;
+  height: 36px; margin: 0; padding: 0; border: 0; border-radius: 0; background: transparent;
+  font: 400 10px/1.4 var(--font-mono); letter-spacing: 0; color: #96998e; text-decoration: none; cursor: pointer;
+}
+#root .cover-forward { left: 2.778%; }
+#root .cover-motion { right: 2.778%; gap: 12px; }
+#root :is(.cover-forward, .cover-motion):hover { color: #d2d4c7; }
+#root :is(.cover-forward, .cover-motion):focus-visible { outline: 1px solid #aeb2a4; outline-offset: 5px; }
+#root .site-header {
+  padding: 22px 2.778vw; height: 76px; min-height: 0; background: transparent; border: 0; mix-blend-mode: normal;
+  pointer-events: none;
+}
+#root .site-header > * { pointer-events: auto; }
+#root .site-header.is-cover :is(.wordmark, .chapter-position) { visibility: hidden; }
+#root .site-header .menu-button {
+  min-height: 36px; height: 36px; margin: 0; padding: 0; gap: 25px; border: 0; color: #96998e;
+  font: 400 10px/1.4 var(--font-mono); letter-spacing: 0; text-transform: uppercase;
+}
+#root .site-header .menu-button > span { font-size: 12px; }
+#root .intro-reading > .intro-lead { margin: 0 0 1.6em; }
+#root .intro-reading > .action { margin-top: 40px; }
+#root :is(.meta, .micro-label, .timecode, .system-status, .chapter-rail) { font-family: var(--font-mono); font-weight: 400; }
+#root .serif-accent { font-family: var(--font-serif); font-weight: 300; font-style: italic; }
+.chapter-rail {
+  position: fixed; right: 16px; top: 50%; transform: translateY(-50%); z-index: 21;
+  display: flex; flex-direction: column; margin: 0; padding: 0;
+}
+.chapter-rail a { position: relative; display: grid; place-items: center; width: 27px; height: 24px; text-decoration: none; }
+.chapter-rail i { display: block; width: 4px; height: 4px; border-radius: 3px; background: #85897d; opacity: .6; transition: height .25s ease, opacity .25s ease; }
+.chapter-rail a[aria-current] i { height: 19px; background: #bbbeaf; opacity: 1; }
+.rail-number { position: absolute; right: 30px; top: 50%; transform: translateY(-50%); font: 400 10px/1 var(--font-mono); color: #c4c4ba; opacity: 0; pointer-events: none; transition: opacity .2s ease; }
+.chapter-rail a:is(:hover, :focus-visible) .rail-number { opacity: 1; }
+.chapter-rail a:focus-visible { outline: 1px solid #a1a596; outline-offset: -3px; }
+@media (min-width: 701px) {
+  .chapter-rail a::before { content: ""; position: absolute; inset: 0 0 0 -17px; }
+}
+@media (max-width: 700px) {
+  #root .hero { min-height: 560px; }
+  #root .hero .hero-eyebrow { top: 26px; left: 20px; font-size: 10px; }
+  #root .hero .hero-subtitle { top: 94px; left: 20px; transform: none; text-align: left; font-size: 9.5px; line-height: 1.6; }
+  #root .site-header { padding: 12px 20px; height: 56px; }
+  #root .site-header .menu-button { font-size: 10px; gap: 12px; }
+  #root .cover-who { left: 5%; top: auto; bottom: calc(90px + 34cqw); font-size: 20.6cqw; letter-spacing: -.065em; }
+  #root .cover-belongs { left: 9%; top: auto; bottom: calc(90px + 18cqw); font-size: 17cqw; letter-spacing: -.04em; }
+  #root .cover-pause { left: 23%; top: auto; bottom: 80px; font-size: 19cqw; letter-spacing: -.065em; }
+  #root :is(.cover-forward, .cover-motion) { font-size: 10px; bottom: 16px; height: 44px; }
+  #root .cover-forward { left: 20px; }
+  #root .cover-motion { right: 32px; gap: 8px; }
+  #root :is(.section, .intro-body, .longread-footer) { padding-right: 50px; }
+  .chapter-rail { right: 12px; }
+  .chapter-rail a { width: 24px; height: 26px; }
+  .chapter-rail i { width: 3px; height: 3px; }
+  .chapter-rail a[aria-current] i { height: 15px; }
+  .rail-number { right: 26px; font-size: 9px; background: #181917; padding: 3px; }
+  .cover-haze { inset: -20% -65% 0; }
+  .cover-strip { left: -60%; right: -50%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cover-field i { will-change: auto; }
+  .chapter-rail i, .rail-number { transition: none; }
+}
+
+#root .experiment-console { background: transparent; }
+
+#root .site-header .wordmark { font: 400 11px var(--font-mono); }
+#root .sticky-phrase { font-weight: 300; }
+#root .eta-current { font-family: var(--font-mono); font-weight: 400; }
+#root .contents-dialog nav a { font-weight: 500; }
+@media (max-width: 700px) {
+  .chapter-rail a::before { content: ""; position: absolute; inset: 0 0 0 -20px; }
+}
+
+#root .eta-system-line { background: #a9b8b2 !important; }
+#root .eta-scene.is-updated .eta-system-line { background: #b5ac98 !important; }
+#root .interval-line { box-shadow: none; }
+#root .caption { font-weight: 500; }
+#root .site-header .wordmark > span { font-family: var(--font-mono); font-style: normal; font-weight: 400; }
+#root .overload-noise { font-weight: 400; }

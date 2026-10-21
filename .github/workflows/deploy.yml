@@ -26,6 +26,12 @@ jobs:
           cache: npm
       - name: Install dependencies
         run: npm ci
+      - name: Lint, typecheck and unit tests
+        run: npm run lint && npm run typecheck && npm run test:unit
+      - name: Install browser for checks
+        run: npx playwright install --with-deps chromium
+      - name: Browser checks
+        run: npm run test:e2e
       - name: Build website
         run: npm run build -- --base=/-WhoOwnsThePause/
       - name: Upload website

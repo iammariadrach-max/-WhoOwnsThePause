@@ -1,38 +1,116 @@
-import type { ReactNode } from "react";
-
-export const chapters = [
-  ["opening", "Вступление"],
-  ["perception", "Десять секунд"],
-  ["attention", "Внимание"],
-  ["uncertainty", "Неизвестность"],
-  ["comparison", "Три ощущения"],
-  ["ninety-nine", "Последний процент"],
-] as const;
-
-export function SectionMarker({
-  number,
+import { useId, type ReactNode } from "react";
+import EditorialText from "./EditorialText";
+import { editorial, type EditorialPart } from "../content/editorial";
+export { SourceMarker, RichText } from "./TextSources";
+import { chapters } from "../content/longread";
+import { scenes, acts, sceneAttributes } from "../content/scenes";
+import { MixedTitle } from "./EditorialType";
+import { scrollToElement } from "../hooks/scrollDriver";
+export { chapters } from "../content/longread";
+export function goTo(id: string, smooth = false) {
+  const target = document.getElementById(id);
+  if (target) scrollToElement(target, smooth);
+  target?.focus({ preventScroll: true });
+  history.replaceState(null, "", `#${id}`);
+}
+export function BodyText({
   children,
-  tag,
+  className = "",
 }: {
-  number: string;
   children: ReactNode;
-  tag?: string;
+  className?: string;
 }) {
+  return <div className={`body-copy ${className}`}>{children}</div>;
+}
+export function Content({
+  part,
+  className = "",
+}: {
+  part: EditorialPart;
+  className?: string;
+}) {
+  return <EditorialText blocks={editorial[part]} className={className} />;
+}
+export function SectionShell({
+  zone,
+  children,
+  className = "",
+  title = true,
+}: {
+  zone: number;
+  children: ReactNode;
+  className?: string;
+  title?: boolean;
+}) {
+  const chapter = chapters[zone - 1];
   return (
-    <div className="section-marker">
-      <span>
-        <span className="marker-cross">+</span> {number} / 06
-      </span>
-      <span>{children}</span>
-      <span className="marker-tag">{tag ?? "КОМУ ПРИНАДЛЕЖИТ ПАУЗА"}</span>
-    </div>
+    <section
+      id={chapter.id}
+      tabIndex={-1}
+      className={`section scene-surface ${className}`}
+      {...sceneAttributes(zone)}
+      data-scene={chapter.id}
+      aria-labelledby={`${chapter.id}-title`}
+    >
+      <div className="section-meta meta">
+        <span className="chapter-index">CH. {chapter.number} / {chapters.length}</span>
+        <span>{acts[scenes[zone - 1].act]}</span>
+        <span aria-hidden="true">+</span>
+      </div>
+      {title && (
+        <h2 id={`${chapter.id}-title`} className="section-title">
+          <MixedTitle
+            text={chapter.title}
+            accent={zone === 6 ? "долгий" : zone === 15 ? "ваши" : undefined}
+          />
+        </h2>
+      )}
+      {children}
+    </section>
   );
 }
-
-export function Reference({ children }: { children: ReactNode }) {
+export function Choice({
+  title,
+  options,
+  value,
+  onChange,
+}: {
+  title: string;
+  options: readonly string[];
+  value: string | null;
+  onChange: (value: string) => void;
+}) {
+  const id = useId();
   return (
-    <sup className="reference" aria-label={`Ссылка на источник ${children}`}>
-      [{children}]
-    </sup>
+    <fieldset className="choice">
+      <legend className="lead">{title}</legend>
+      <div className="choice-options">
+        {options.map((option) => (
+          <label key={option}>
+            <input
+              type="radio"
+              name={id}
+              checked={value === option}
+              onChange={() => onChange(option)}
+            />
+            <span>{option}</span>
+          </label>
+        ))}
+      </div>
+    </fieldset>
+  );
+}
+export function Disclosure({
+  title,
+  children,
+}: {
+  title: string;
+  children: ReactNode;
+}) {
+  return (
+    <details className="disclosure">
+      <summary>{title}</summary>
+      <div className="caption">{children}</div>
+    </details>
   );
 }

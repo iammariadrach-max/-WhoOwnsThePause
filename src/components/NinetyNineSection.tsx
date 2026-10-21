@@ -1,182 +1,111 @@
-import { useEffect, useRef, useState } from "react";
-import { useInView, useReducedMotion } from "../hooks/useMotion";
-import { Reference, SectionMarker } from "./Shared";
-
+import { useLongread } from "../state/LongreadContext";
+import { useElapsedTimer } from "../hooks/useElapsedTimer";
+import { now } from "../hooks/timing";
+import { copy } from "../content/longread";
+import { PrimaryAction, SkipAction } from "./Actions";
+import { SectionShell, Content } from "./Shared";
 export default function NinetyNineSection() {
-  const stage = useRef<HTMLDivElement>(null);
-  const visible = useInView(stage, 0.4);
-  const reduced = useReducedMotion();
-  const [step, setStep] = useState(0);
-  const [iteration, setIteration] = useState(0);
-  const elapsed = useRef(0);
-  const ended = useRef(false);
-  useEffect(() => {
-    if (!visible || ended.current) return;
-    let previous = performance.now(),
-      frame = 0;
-    function tick(now: number) {
-      if (!document.hidden) elapsed.current += Math.min(now - previous, 100);
-      previous = now;
-      const t = elapsed.current;
-      const next =
-        t < 200
-          ? 0
-          : t < 550
-            ? 1
-            : t < 900
-              ? 2
-              : t < 1250
-                ? 3
-                : t < 2250
-                  ? 4
-                  : t < 3250
-                    ? 5
-                    : t < 4250
-                      ? 6
-                      : t < 5250
-                        ? 7
-                        : 8;
-      setStep((old) => (old === next ? old : next));
-      if (next < 8) frame = requestAnimationFrame(tick);
-      else ended.current = true;
-    }
-    frame = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(frame);
-  }, [visible, iteration]);
-  const percentage = reduced ? 99 : [0, 40, 75, 94, 99][Math.min(step, 4)];
-  const checked = step === 8;
-  function replay() {
-    elapsed.current = 0;
-    ended.current = false;
-    setStep(0);
-    setIteration((v) => v + 1);
-    stage.current?.scrollIntoView({
-      block: "center",
-      behavior: reduced ? "instant" : "smooth",
-    });
-  }
+  const { dispatch } = useLongread();
+  const timer = useElapsedTimer("ninetyNine");
+  const t = timer.elapsed;
+  const value =
+    timer.status === "idle"
+      ? 99
+      : t < 300
+        ? 0
+        : t < 650
+          ? 40
+          : t < 1000
+            ? 75
+            : t < 1400
+              ? 94
+              : 99;
+  const checked = timer.status === "complete" || timer.status === "cancelled";
   return (
-    <section
-      id="ninety-nine"
-      className="ninety-nine editorial-pad"
-      aria-labelledby="ninety-title"
-    >
-      <SectionMarker number="06">ОБЕЩАНИЕ ИНДИКАТОРА</SectionMarker>
-      <div className="ninety-heading">
-        <h2 id="ninety-title">
-          Почему последний
-          <br />
-          процент <em>такой долгий</em>
-        </h2>
-        <p>
-          Полоса почти заполнена.
-          <br />
-          Кажется, осталось совсем немного.
-        </p>
-      </div>
-      <div
-        ref={stage}
-        className={`ninety-stage ${checked ? "is-checked" : ""}`}
-      >
-        <div className="ninety-display" aria-hidden="true">
+    <SectionShell zone={6} className="dark ninety-nine">
+      <p className="lead">
+        Полоса почти заполнена. Кажется, осталось совсем немного.
+      </p>
+      <div className="ninety-stage">
+        <p className="micro-label">WORK COMPLETED / TIME REMAINING</p>
+        <div className="ninety-display">
           {checked ? (
-            <p className="checking-label">
+            <p className="section-title checking-label">
               Проверяем
               <br />
-              <em>результат</em>
-              <span className="checking-dot">.</span>
+              результат
             </p>
           ) : (
-            <p className="huge-percent">
-              {percentage}
+            <p className="huge-percent" aria-hidden="true">
+              {value}
               <span>%</span>
             </p>
           )}
         </div>
         <div className="ninety-progress" aria-hidden="true">
-          <i style={{ width: `${checked ? 99 : percentage}%` }} />
+          <i style={{ width: `${value}%` }} />
         </div>
-        <div className="ninety-bottom">
-          <div className="pause-sequence" aria-hidden="true">
-            <span className={step >= 5 ? "appeared" : ""}>
-              Проходит секунда.
-            </span>
-            <span className={step >= 6 ? "appeared" : ""}>Ещё одна.</span>
-            <span className={step >= 7 ? "appeared" : ""}>И ещё.</span>
+        <dl className="progress-facts">
+          <div>
+            <dt className="meta">ВЫПОЛНЕНО</dt>
+            <dd className="system-status">{value} из 100 файлов</dd>
           </div>
-          <span className="micro">
-            {checked ? "ТОЧНОСТЬ ≠ ЯСНОСТЬ" : "ПОЧТИ — НЕ ЗНАЧИТ ГОТОВО"}
-          </span>
-        </div>
+          <div>
+            <dt className="meta">ОСТАВШЕЕСЯ ВРЕМЯ</dt>
+            <dd className="system-status">неизвестно</dd>
+          </div>
+        </dl>
+        <p className="system-status pause-sequence">
+          {timer.status === "running" && t >= 2400
+            ? t >= 4400
+              ? "Проходит секунда. Ещё одна. И ещё."
+              : t >= 3400
+                ? "Проходит секунда. Ещё одна."
+                : "Проходит секунда."
+            : "\u00a0"}
+        </p>
         <p className="sr-only" role="status">
           {checked
-            ? "Вместо процента появился статус: Проверяем результат."
-            : step >= 4
+            ? "Проверяем результат. Оставшееся время неизвестно."
+            : timer.status === "running" && value === 99
               ? "99 процентов. Ожидание продолжается."
-              : "Обрабатываем запрос."}
+              : "Доля работы не определяет время ожидания."}
         </p>
       </div>
-      <div className="ninety-explanation">
-        <div>
-          <p className="lead">
-            Почему последний процент иногда длится дольше предыдущих девяноста
-            девяти?
-          </p>
-          <button className="text-button micro" onClick={replay}>
-            ПОЧУВСТВОВАТЬ ЕЩЁ РАЗ <span aria-hidden="true">↺</span>
-          </button>
-        </div>
-        <div className="body-copy">
-          <p className="emphasis">
-            Потому что процент выполненной работы и процент прошедшего времени —
-            не обязательно одно и то же.
-          </p>
-          <p>
-            Система могла обработать 99 из 100 файлов — но последний оказался
-            самым большим.
-          </p>
-          <p>
-            Или основная операция закончилась, но теперь нужно проверить
-            результат.
-          </p>
-          <p>
-            В такой ситуации число 99% создаёт обещание, которого система не
-            обязательно может выполнить.
-          </p>
-          <p>
-            Иногда честное «Проверяем результат» полезнее, чем точное число без
-            объяснения.
-          </p>
-          <p className="research-note">
-            Исследования progress bar показывают, что характер движения
-            индикатора способен влиять на восприятие ожидания. Но универсальной
-            траектории, которая делает любое ожидание хорошим, не существует.{" "}
-            <Reference>3</Reference>
-          </p>
-        </div>
+      <div className="actions">
+        <PrimaryAction
+          disabled={timer.status === "running"}
+          onClick={() =>
+            dispatch({
+              type: "start",
+              key: "ninetyNine",
+              now: now(),
+              duration: 5400,
+            })
+          }
+        >
+          {timer.status === "idle" ? "Посмотреть ожидание" : "Повторить"}
+        </PrimaryAction>
+        {timer.status === "running" && (
+          <SkipAction
+            onClick={() =>
+              dispatch({
+                type: "settle",
+                key: "ninetyNine",
+                status: "cancelled",
+                run: timer.run,
+              })
+            }
+          >
+            Пропустить ожидание
+          </SkipAction>
+        )}
       </div>
-      <footer className="site-footer">
-        <div className="footer-pause">
-          <span className="pause-mark" aria-hidden="true">
-            <i />
-            <i />
-          </span>
-          <p>
-            Пауза остаётся
-            <br />
-            <em>за вами.</em>
-          </p>
-        </div>
-        <div className="footer-bottom micro">
-          <span>
-            КОМУ ПРИНАДЛЕЖИТ ПАУЗА
-            <br />
-            ИНТЕРАКТИВНАЯ ПУБЛИКАЦИЯ
-          </span>
-          <span>ПЕРВЫЕ ШЕСТЬ ГЛАВ / 2026</span>
-          <a href="#opening">К НАЧАЛУ ↑</a>
-        </div>
-      </footer>
-    </section>
+      <Content
+        part="ninetyNine"
+        className="reading-offset progress-explanation"
+      />
+      <p className="caption progress-conclusion">{copy.progressConclusion}</p>
+    </SectionShell>
   );
 }
