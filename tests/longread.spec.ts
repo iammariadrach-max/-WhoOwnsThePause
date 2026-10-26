@@ -53,6 +53,10 @@ test("all fifteen zones, responsive layouts, navigation, sources and reload", as
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
   page.on("console", (message) => {
+    // Chromium's software GPU can warn when screenshots read the WebGL canvas.
+    // Ignore only this driver diagnostic; keep application warnings/errors fatal.
+    if (message.type() === "warning" && /^\[\.WebGL-0x[0-9a-f]+\]GL Driver Message \(OpenGL, Performance, GL_CLOSE_PATH_NV, High\): GPU stall due to ReadPixels(?: \(this message will no longer repeat\))?$/.test(message.text()))
+      return;
     if (["error", "warning"].includes(message.type()))
       errors.push(message.text());
   });
@@ -225,22 +229,23 @@ test("background processing survives scrolling, mode changes and reload; cancell
     .locator("#uncertainty")
     .getByRole("button", { name: "Читать дальше" })
     .click();
-  await page.clock.runFor(11000);
+  // This scenario checks process deadlines, not each intermediate animation frame.
+  await page.clock.fastForward(11000);
   await expect(page.locator(".global-status")).toContainText("Файл готов.");
   await page.reload();
   await expect(page.locator("#uncertainty")).toContainText("Файл готов.");
   await page
     .getByRole("button", { name: "Запустить процесс", exact: true })
     .click();
-  await page.clock.runFor(5000);
+  await page.clock.fastForward(5000);
   await page.getByRole("button", { name: "Смотреть анимацию" }).click();
-  await page.clock.runFor(5000);
+  await page.clock.fastForward(5000);
   await page.getByRole("button", { name: "Следить за индикатором" }).click();
   await page
     .getByRole("button", { name: "Читать дальше", exact: true })
     .last()
     .click();
-  await page.clock.runFor(10100);
+  await page.clock.fastForward(10100);
   await expect(page.locator(".waiting-choice")).toHaveAttribute(
     "data-status",
     "complete",
@@ -251,7 +256,11 @@ test("background processing survives scrolling, mode changes and reload; cancell
   await page
     .getByRole("button", { name: "Отменить запрос", exact: true })
     .click();
-  await page.clock.runFor(30000);
+  await expect(page.locator(".waiting-choice")).toHaveAttribute(
+    "data-status",
+    "cancelled",
+  );
+  await page.clock.fastForward(30000);
   await expect(page.locator(".waiting-choice")).toHaveAttribute(
     "data-status",
     "cancelled",

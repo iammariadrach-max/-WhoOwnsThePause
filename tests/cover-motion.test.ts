@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { advanceCover, coverShouldStop, BRAKE_SECONDS } from '../src/hooks/coverMotion.ts';
+import { advanceCover, advanceCoverFrame, coverShouldStop, BRAKE_SECONDS } from '../src/hooks/coverMotion.ts';
 test('button braking reaches exact rest in 1.25 seconds, without resetting phase', () => {
   const half = advanceCover({phase: 42, speed: 1}, BRAKE_SECONDS/2, true);
   assert.equal(half.speed, .5);
@@ -39,4 +39,23 @@ test('the same elapsed time gives the same phase at different frame rates', () =
   const coarse = advanceCover({phase: 0, speed: 1}, 2, true);
   assert.ok(Math.abs(fine.phase - coarse.phase) < 1e-10);
   assert.equal(fine.speed, coarse.speed);
+});
+test('visible frame timestamps keep braking and resume on time at 4 fps', () => {
+  for (const stopped of [true, false]) {
+    const initial = {phase: 42, speed: stopped ? 1 : 0};
+    let clock = advanceCoverFrame(initial, null, 0, stopped);
+    for (let current = 250; current <= 1250; current += 250)
+      clock = advanceCoverFrame(clock, current - 250, current, stopped);
+    const expected = advanceCover(initial, BRAKE_SECONDS, stopped);
+    assert.ok(Math.abs(clock.speed - expected.speed) < 1e-10);
+    assert.ok(Math.abs(clock.phase - expected.phase) < 1e-10);
+  }
+});
+test('returning from a hidden or idle scene does not advance its phase', () => {
+  const frozen = {phase: 42, speed: 0};
+  const returned = advanceCoverFrame(frozen, null, 60000, false);
+  assert.deepEqual(returned, frozen);
+  const nextFrame = advanceCoverFrame(returned, 60000, 61250, false);
+  assert.equal(nextFrame.speed, 1);
+  assert.equal(nextFrame.phase, 42 + BRAKE_SECONDS / 2);
 });

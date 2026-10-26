@@ -11,6 +11,12 @@ export function advanceCover(clock: CoverClock, delta: number, stopped: boolean)
     phase: clock.phase + ramp * (clock.speed + speed) / 2 + Math.max(0, delta - ramp) * target,
   };
 }
+/** Frame timestamps are milliseconds. Reset previous to null while hidden/idle.
+ * Do not cap visible frame time: a slow GPU must still brake/resume in 1.25s. */
+export function advanceCoverFrame(clock: CoverClock, previous: number | null, current: number, stopped: boolean): CoverClock {
+  const delta = previous === null ? 0 : Math.max(0, current - previous) / 1000;
+  return advanceCover(clock, delta, stopped);
+}
 export function coverShouldStop(manual: boolean, reduced: boolean, pagePaused: boolean) {
   return manual || reduced || pagePaused;
 }
