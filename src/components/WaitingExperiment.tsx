@@ -1,3 +1,4 @@
+import ReflectionField from "./ReflectionField";
 import { useLongread } from "../state/LongreadContext";
 import { now } from "../hooks/timing";
 import { useProgress } from "../hooks/useElapsedTimer";
@@ -26,84 +27,89 @@ function WaitingChoice() {
   const process = state.processes.secondary;
   const modeKeys = ["indicator", "animation", "reading"] as const;
   return (
-    <div className="waiting-choice" data-status={process.status}>
-      <p className="lead">{copy.thirdQuestion}</p>
-      <p className="instruction">
-        Этот отдельный процесс длится около 20 секунд. Режим ожидания можно
-        менять.
-      </p>
-      {process.status !== "running" && (
-        <PrimaryAction
-          onClick={() =>
-            dispatch({
-              type: "start",
-              key: "secondary",
-              now: now(),
-              duration: 20000,
-            })
-          }
-        >
-          {process.status === "idle" ? "Запустить процесс" : "Запустить снова"}
-        </PrimaryAction>
-      )}
-      <div className="waiting-modes" aria-label="Режим ожидания">
-        {copy.waitingModes.map((label, i) => (
-          <SecondaryAction
-            key={label}
-            aria-pressed={state.secondaryWaitingMode === modeKeys[i]}
-            onClick={() => {
-              dispatch({
-                type: "set",
-                key: "secondaryWaitingMode",
-                value: modeKeys[i],
-              });
-              if (i === 2) goTo("ninety-nine");
-            }}
-          >
-            {label}
-          </SecondaryAction>
-        ))}
-      </div>
-      <div className="waiting-display">
-        <p className="system-status" role="status">
-          {process.status === "complete"
-            ? "Готово. Процесс завершён."
-            : process.status === "cancelled"
-              ? "Запрос отменён."
-              : process.status === "running"
-                ? "Обрабатываем запрос"
-                : "Процесс ещё не запущен."}
+    <div id="waiting-choice" tabIndex={-1} className="waiting-choice reflection-scene" data-status={process.status}>
+      <ReflectionField variant="choice" />
+      <div className="waiting-story">
+        <p className="lead">{copy.thirdQuestion}</p>
+        <p className="instruction">
+          Этот отдельный процесс длится около 20 секунд. Режим ожидания можно
+          менять.
         </p>
-        {process.status === "running" &&
-          (state.secondaryWaitingMode === "animation" ? (
-            <div className="functional-orbit" aria-hidden="true">
-              <i />
-            </div>
-          ) : state.secondaryWaitingMode === "indicator" ? (
-            <LinearProgress process="secondary" />
-          ) : (
-            <p className="caption">
-              Можно читать дальше. Результат появится в общем статусе.
-            </p>
-          ))}
+        {process.status !== "running" && (
+          <PrimaryAction
+            onClick={() =>
+              dispatch({
+                type: "start",
+                key: "secondary",
+                now: now(),
+                duration: 20000,
+              })
+            }
+          >
+            {process.status === "idle" ? "Запустить процесс" : "Запустить снова"}
+          </PrimaryAction>
+        )}
       </div>
-      <Disclosure title="Почему нужно ждать?">
-        {copy.waitingExplanation}
-      </Disclosure>
-      {process.status === "running" && (
-        <DestructiveAction
-          onClick={() =>
-            dispatch({
-              type: "settle",
-              key: "secondary",
-              status: "cancelled",
-              run: process.run,
-            })
-          }
-        >
-          Отменить запрос
-        </DestructiveAction>
-      )}
+      <div className="waiting-controls">
+        <div className="waiting-modes" aria-label="Режим ожидания">
+          {copy.waitingModes.map((label, i) => (
+            <SecondaryAction
+              key={label}
+              aria-pressed={state.secondaryWaitingMode === modeKeys[i]}
+              onClick={() => {
+                dispatch({
+                  type: "set",
+                  key: "secondaryWaitingMode",
+                  value: modeKeys[i],
+                });
+                if (i === 2) goTo("ninety-nine");
+              }}
+            >
+              {label}
+            </SecondaryAction>
+          ))}
+        </div>
+        <div className="waiting-display">
+          <p className="system-status" role="status">
+            {process.status === "complete"
+              ? "Готово. Процесс завершён."
+              : process.status === "cancelled"
+                ? "Запрос отменён."
+                : process.status === "running"
+                  ? "Обрабатываем запрос"
+                  : "Процесс ещё не запущен."}
+          </p>
+          {process.status === "running" &&
+            (state.secondaryWaitingMode === "animation" ? (
+              <div className="functional-orbit" aria-hidden="true">
+                <i />
+              </div>
+            ) : state.secondaryWaitingMode === "indicator" ? (
+              <LinearProgress process="secondary" />
+            ) : (
+              <p className="caption">
+                Можно читать дальше. Результат появится в общем статусе.
+              </p>
+            ))}
+        </div>
+        <Disclosure title="Почему нужно ждать?">
+          {copy.waitingExplanation}
+        </Disclosure>
+        {process.status === "running" && (
+          <DestructiveAction
+            onClick={() =>
+              dispatch({
+                type: "settle",
+                key: "secondary",
+                status: "cancelled",
+                run: process.run,
+              })
+            }
+          >
+            Отменить запрос
+          </DestructiveAction>
+        )}
+      </div>
       <p className="body waiting-conclusion">{copy.waitingEnd}</p>
     </div>
   );

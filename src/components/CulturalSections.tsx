@@ -1,3 +1,4 @@
+import ReflectionField from "./ReflectionField";
 import { useRef } from "react";
 import { useInView } from "../hooks/useMotion";
 import { useLongread } from "../state/LongreadContext";
@@ -6,9 +7,10 @@ import { copy, chapters } from "../content/longread";
 import { PrimaryAction, SecondaryAction } from "./Actions";
 import { SectionShell, Content, goTo } from "./Shared";
 import OverloadField from "./OverloadField";
-import { MicroLabel } from "./EditorialType";
+import { MicroLabel, MixedTitle } from "./EditorialType";
 import { sceneAttributes } from "../content/scenes";
 import { TypeSedimentTransition } from "./SceneTransitions";
+import IllustratedReading from "./IllustratedReading";
 export function PartTwo() {
   return (
     <aside
@@ -18,7 +20,7 @@ export function PartTwo() {
       data-scene="part-two"
     >
       <span className="meta">ЧАСТЬ II</span>
-      <p className="section-title">{copy.partTwo}</p>
+      <p className="section-title"><MixedTitle text={copy.partTwo} /></p>
       <span className="meta">КТО РАСПОРЯЖАЕТСЯ ПАУЗОЙ</span>
     </aside>
   );
@@ -65,7 +67,7 @@ export function OverloadedPause() {
           )}
         </div>
       </div>
-      <Content part="overload" className="reading-offset" />
+      <IllustratedReading part="overload" />
       <TypeSedimentTransition clear={!state.overloaded} />
     </SectionShell>
   );
@@ -74,7 +76,8 @@ export function OptionalPause() {
   const { state, dispatch } = useLongread();
   const status = state.processes.optional.status;
   return (
-    <SectionShell zone={10} className="light optional-pause">
+    <SectionShell zone={10} className="light optional-pause reflection-scene">
+      <ReflectionField variant="silence" paused={status === "running"} />
       <div className="optional-copy">
         <Content part="optional" className="silence-copy" />
         <div className="optional-space">
@@ -126,7 +129,7 @@ export function RestManifesto() {
       <div className="rest-manifesto">
         {copy.restVerbs.map((word, i) => (
           <div key={word}>
-            <p className="section-title">{word}</p>
+            <p className="section-title"><MixedTitle text={word} /></p>
             <div className="rest-kpi">
               <span className="meta">{copy.restKpi[i]}</span>
               <p className="caption">
@@ -136,9 +139,7 @@ export function RestManifesto() {
           </div>
         ))}
       </div>
-      <div ref={question} className="rest-prose reading-offset">
-        <Content part="rest" />
-      </div>
+      <IllustratedReading ref={question} part="rest" className="rest-prose" />
     </SectionShell>
   );
 }

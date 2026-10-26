@@ -1,6 +1,8 @@
+import ReflectionField from "./ReflectionField";
 import { useLongread } from "../state/LongreadContext";
 import { copy, chapters } from "../content/longread";
-import { SectionShell, Content } from "./Shared";
+import { SectionShell } from "./Shared";
+import IllustratedReading from "./IllustratedReading";
 import { PauseAction } from "./Actions";
 import { TimerExperience } from "./PerceptionTimer";
 import { AfterimageText, MixedTitle, TimecodeRail } from "./EditorialType";
@@ -15,7 +17,7 @@ export default function FinalSection() {
       </p>
       <TimerExperience variant="second" />
       <p className="caption">Или не делать.</p>
-      <Content part="final" className="reading-offset final-copy" />
+      <IllustratedReading part="final" className="final-copy" />
       <div className="page-pause">
         <PauseAction
           aria-pressed={state.pageMotionPaused}
@@ -32,9 +34,10 @@ export default function FinalSection() {
       <div
         id="finale"
         tabIndex={-1}
-        className={`finale dark ${state.pageMotionPaused ? "is-held" : ""}`}
+        className={`finale dark reflection-scene ${state.pageMotionPaused ? "is-held" : ""}`}
         data-final-status={state.finaleStatus}
       >
+        <ReflectionField variant="release" />
         <TimecodeRail
           label={
             state.pageMotionPaused ? "HOLD / ВЫБРАНО ВАМИ" : "EXPOSURE / 15"

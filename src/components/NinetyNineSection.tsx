@@ -3,7 +3,9 @@ import { useElapsedTimer } from "../hooks/useElapsedTimer";
 import { now } from "../hooks/timing";
 import { copy } from "../content/longread";
 import { PrimaryAction, SkipAction } from "./Actions";
-import { SectionShell, Content } from "./Shared";
+import { SectionShell } from "./Shared";
+import IllustratedReading from "./IllustratedReading";
+import { SerifAccent } from "./EditorialType";
 export default function NinetyNineSection() {
   const { dispatch } = useLongread();
   const timer = useElapsedTimer("ninetyNine");
@@ -33,7 +35,7 @@ export default function NinetyNineSection() {
             <p className="section-title checking-label">
               Проверяем
               <br />
-              результат
+              <SerifAccent>результат</SerifAccent>
             </p>
           ) : (
             <p className="huge-percent" aria-hidden="true">
@@ -101,9 +103,9 @@ export default function NinetyNineSection() {
           </SkipAction>
         )}
       </div>
-      <Content
+      <IllustratedReading
         part="ninetyNine"
-        className="reading-offset progress-explanation"
+        className="progress-explanation"
       />
       <p className="caption progress-conclusion">{copy.progressConclusion}</p>
     </SectionShell>

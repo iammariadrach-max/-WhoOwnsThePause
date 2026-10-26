@@ -6,6 +6,7 @@ test("cover motion only responds to the button and the dot screen stays still", 
   const field = page.locator(".cover-field");
   const button = page.locator(".cover-motion");
   const dots = page.locator(".cover-dots");
+  await expect(field).toHaveAttribute("data-renderer", "webgl");
   await expect(field).toHaveAttribute("data-speed", "1.000");
   await expect(dots).toHaveCount(1);
   await expect(dots).toHaveCSS("pointer-events", "none");
@@ -18,6 +19,7 @@ test("cover motion only responds to the button and the dot screen stays still", 
   }
   await button.click();
   await expect(button).toHaveAttribute("aria-pressed", "true");
+  await expect(button).toHaveText(/ПРОДОЛЖИТЬ ДВИЖЕНИЕ/);
   expect(await page.locator(".hero").evaluate((element) => element.scrollTop)).toBe(0);
   await expect(field).toHaveAttribute("data-speed", "0.000");
   const phase = await field.getAttribute("data-phase");
@@ -31,6 +33,13 @@ test("cover motion only responds to the button and the dot screen stays still", 
   await expect.poll(async () => Number(await field.getAttribute("data-phase"))).toBeGreaterThan(Number(phase));
   await expect(dots).toHaveCSS("background-position", pattern);
   await expect(dots).toHaveCSS("transform", "none");
+  // Reversing midway changes velocity, without resetting accumulated time.
+  const beforeToggle = Number(await field.getAttribute("data-phase"));
+  await button.click();
+  await page.waitForTimeout(200);
+  await button.click();
+  await expect(field).toHaveAttribute("data-speed", "1.000");
+  expect(Number(await field.getAttribute("data-phase"))).toBeGreaterThan(beforeToggle);
   await page.setViewportSize({ width: 390, height: 844 });
   await button.click();
   await expect(field).toHaveAttribute("data-speed", "0.000");
@@ -51,7 +60,8 @@ test("all fifteen zones, responsive layouts, navigation, sources and reload", as
   await page.evaluate(() => document.fonts.ready);
   await expect(page.locator("main > section")).toHaveCount(15);
   await expect(page.locator("h1")).toHaveCount(1);
-  await expect(page.locator(".chapter-rail a")).toHaveCount(15);
+  await expect(page.locator(".chapter-rail")).toHaveCount(0);
+  await expect(page.locator("#contents nav a")).toHaveCount(15);
   for (const [width, height] of [
     [1440, 900],
     [1512, 982],
@@ -61,7 +71,8 @@ test("all fifteen zones, responsive layouts, navigation, sources and reload", as
     [360, 800],
   ]) {
     await page.setViewportSize({ width, height });
-    await page.locator('.chapter-rail a[href="#opening"]').press("Enter");
+    await page.locator(".menu-button").click();
+    await page.locator('#contents a[href="#opening"]').press("Enter");
     await expect.poll(() => page.evaluate(() => scrollY)).toBe(0);
     expect(
       await page.evaluate(() => document.documentElement.scrollWidth),
@@ -92,12 +103,19 @@ test("both perception attempts use real elapsed time without running hints", asy
   await page.goto("/#perception");
   await page.clock.pauseAt(new Date("2026-10-19T10:00:00Z"));
   const first = page.locator('[data-timer="first"]');
+  const readout = page.locator(".perception-readout");
   await first.getByRole("button", { name: "Начать", exact: true }).click();
   await expect(first.locator(".result-value")).toHaveCount(0);
   await expect(first.locator(".linear-progress,.spinner")).toHaveCount(0);
   await page.clock.runFor(13400);
+  await expect(readout).toHaveAttribute("data-state", "running");
+  await expect(readout.locator(".perception-readout-target")).toHaveCSS("opacity", "1");
   await first.getByRole("button", { name: "Остановить", exact: true }).click();
   await expect(first.locator(".result-value")).toContainText("13,4");
+  await expect(readout).toHaveAttribute("data-result", "13,4");
+  await page.clock.runFor(1000);
+  await expect(readout.locator(".perception-readout-result")).toHaveCSS("opacity", "1");
+  await expect(readout.locator(".perception-readout-target")).toHaveCSS("opacity", "0");
   const second = page.locator('[data-timer="second"]');
   await second.getByRole("button", { name: "Попробовать снова" }).click();
   await page.clock.runFor(9000);
@@ -107,6 +125,10 @@ test("both perception attempts use real elapsed time without running hints", asy
   await expect(second).toContainText("не доказывают");
   await first.getByRole("button", { name: "Повторить", exact: true }).click();
   await expect(first.locator(".result-value")).toHaveCount(0);
+  await expect(readout).toHaveAttribute("data-state", "idle");
+  await expect(readout).not.toHaveAttribute("data-result");
+  await page.clock.runFor(1000);
+  await expect(readout.locator(".perception-readout-target")).toHaveCSS("opacity", "1");
 });
 
 test("control bridge permits skip and its deadline enables continue", async ({

@@ -91,7 +91,7 @@ main,
   inset: 0;
   z-index: 4;
   pointer-events: none;
-  background-image: url("../assets/grain.png");
+  background-image: none;
   background-size: 192px 192px;
   opacity: var(--grain-opacity);
   mix-blend-mode: screen;

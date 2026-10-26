@@ -1,5 +1,8 @@
+import ReflectionField from "./ReflectionField";
 import { useState } from "react";
-import { SectionShell, Content, Choice } from "./Shared";
+import { SectionShell, Choice } from "./Shared";
+import IllustratedReading from "./IllustratedReading";
+import { MixedTitle } from "./EditorialType";
 import { copy } from "../content/longread";
 export default function AttentionSection() {
   const [answers, setAnswers] = useState<(string | null)[]>([null, null]);
@@ -11,7 +14,7 @@ export default function AttentionSection() {
           (title, i) => (
             <div className="attention-track" key={title}>
               <div className="track-heading">
-                <h3 className="body">{title}</h3>
+                <h3 className="body"><MixedTitle text={title} /></h3>
                 <span className="system-status">10 SEC</span>
               </div>
               <div
@@ -39,9 +42,10 @@ export default function AttentionSection() {
           ),
         )}
       </div>
-      <Content part="attention" className="reading-offset" />
-      <div className="attention-memory">
-        <div>
+      <IllustratedReading part="attention" />
+      <div id="attention-reflection" tabIndex={-1} className="attention-memory reflection-scene">
+        <ReflectionField variant="memory" />
+        <div className="attention-memory-content">
           <div className="attention-questions">
             {copy.attentionQuestions.map((title, i) => (
               <div key={title}>

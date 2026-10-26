@@ -2,7 +2,8 @@ import { useLongread } from "../state/LongreadContext";
 import { copy, chapters } from "../content/longread";
 import { SectionShell, Content, Disclosure } from "./Shared";
 import { SecondaryAction } from "./Actions";
-import { AfterimageText, MicroLabel } from "./EditorialType";
+import { AfterimageText, MicroLabel, MixedTitle } from "./EditorialType";
+import IllustratedReading from "./IllustratedReading";
 export default function ElasticETA() {
   const { state, dispatch } = useLongread();
   const updated = state.etaState === "updated" || state.reducedMotion;
@@ -11,9 +12,9 @@ export default function ElasticETA() {
       <div className="eta-layout">
         <div className="eta-reading">
           <h2 id="eta-title" className="section-title eta-title">
-            {chapters[6].title}
+            <MixedTitle text={chapters[6].title} />
           </h2>
-          <h3 className="lead">{chapters[6].body[0]}</h3>
+          <h3 className="lead"><MixedTitle text={chapters[6].body[0]} /></h3>
           <Content part="etaIntro" />
           <p className="caption">
             Иллюстративная сцена: ждать две реальные минуты не нужно.
@@ -95,7 +96,7 @@ export default function ElasticETA() {
           </Disclosure>
         </div>
       </div>
-      <Content part="eta" className="reading-offset eta-after" />
+      <IllustratedReading part="eta" className="eta-after" />
     </SectionShell>
   );
 }

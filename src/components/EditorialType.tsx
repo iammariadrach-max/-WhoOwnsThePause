@@ -10,13 +10,14 @@ export function MixedTitle({
   text: string;
   accent?: string;
 }) {
-  if (!accent || !text.includes(accent)) return <>{text}</>;
-  const at = text.indexOf(accent);
+  const word = accent ?? text.trim().split(/\s+/).at(-1);
+  if (!word || !text.includes(word)) return <>{text}</>;
+  const at = accent ? text.indexOf(word) : text.lastIndexOf(word);
   return (
     <>
       {text.slice(0, at)}
-      <SerifAccent>{accent}</SerifAccent>
-      {text.slice(at + accent.length)}
+      <SerifAccent>{word}</SerifAccent>
+      {text.slice(at + word.length)}
     </>
   );
 }

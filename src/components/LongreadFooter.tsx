@@ -14,7 +14,7 @@ export default function LongreadFooter() {
     >
       <TimecodeRail label="END OF EXPOSURE" />
       <div id="sources" className="sources" tabIndex={-1}>
-        <h2 className="lead">Источники и примечания</h2>
+        <h2 className="lead"><MixedTitle text="Источники и примечания" /></h2>
         <p className="caption">{copy.sourceIntro}</p>
         <ol className="source-list">
           {sourceNumbers.map((number) => (

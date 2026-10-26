@@ -1,13 +1,16 @@
-import { useRef } from "react";
+import { useRef, type CSSProperties } from "react";
 import { useLongread } from "../state/LongreadContext";
 import { seconds } from "../hooks/timing";
 import { copy } from "../content/longread";
 import { PrimaryAction, SecondaryAction, SkipAction } from "./Actions";
 import { SectionShell, goTo } from "./Shared";
+import { SerifAccent } from "./EditorialType";
 export function TimerExperience({
   variant = "first",
+  externalResult = false,
 }: {
   variant?: "first" | "second";
+  externalResult?: boolean;
 }) {
   const { state, dispatch } = useLongread();
   const timer = state.timers[variant];
@@ -42,7 +45,7 @@ export function TimerExperience({
                   ? "Вы не проходили первый опыт."
                   : `По таймеру в начале — ${seconds(first)} с.`}
             </p>
-            <p className="result-value">
+            <p className={`result-value${externalResult ? " sr-only" : ""}`}>
               <span className="sr-only">
                 {variant === "first" ? "По таймеру — " : "Сейчас — "}
               </span>
@@ -91,36 +94,54 @@ export function TimerExperience({
             </PrimaryAction>
           </>
         )}
-        {timer.status !== "result" && (
+        {timer.status !== "result" && variant === "second" && (
           <SkipAction
             onClick={() => {
               if (timer.status === "running") event("reset");
-              if (variant === "second")
-                dispatch({
-                  type: "set",
-                  key: "finaleStatus",
-                  value: "revealed",
-                });
-              if (variant === "first") goTo(next);
+              dispatch({ type: "set", key: "finaleStatus", value: "revealed" });
             }}
           >
-            {variant === "first" ? "Пропустить опыт" : "Закончить"}
+            Закончить
           </SkipAction>
         )}
       </div>
     </div>
   );
 }
+function PerceptionReadout() {
+  const { state } = useLongread();
+  const timer = state.timers.first;
+  const hasResult = timer.status === "result" && timer.result !== null;
+  const value = hasResult ? seconds(timer.result!) : "10";
+  return (
+    <div
+      className={`perception-readout${hasResult ? " has-result" : ""}`}
+      data-state={timer.status}
+      data-result={hasResult ? value : undefined}
+      aria-hidden="true"
+      style={{ "--result-size": `${Math.min(64, 155 / value.length)}cqw` } as CSSProperties}
+    >
+      <div className="perception-readout-number">
+        <span className="perception-readout-target">10</span>
+        <span className="perception-readout-result">{hasResult ? value : ""}</span>
+      </div>
+      <span className="perception-readout-unit">{hasResult ? "ПО ТАЙМЕРУ / СЕКУНД" : "СЕКУНД"}</span>
+    </div>
+  );
+}
 export default function PerceptionTimer() {
   return (
-    <SectionShell zone={2} className="light perception">
-      <div className="timer-layout">
-        <span className="timer-index" aria-hidden="true">
-          10<span>секунд</span>
-        </span>
-        <TimerExperience />
+    <SectionShell zone={2} className="light perception" title={false}>
+      <div className="perception-layout">
+        <div className="perception-copy">
+          <h2 id="perception-title" className="section-title">
+            Сколько длятся<br /><SerifAccent>десять</SerifAccent> секунд?
+          </h2>
+          <TimerExperience externalResult />
+          <p className="caption after-note">{copy.timerAfter}</p>
+        </div>
+        <PerceptionReadout />
       </div>
-      <p className="caption after-note">{copy.timerAfter}</p>
     </SectionShell>
   );
 }

@@ -1,6 +1,6 @@
 // Time is accumulated, so stopping never resets the field's position.
 export type CoverClock = { phase: number; speed: number };
-export const BRAKE_SECONDS = 0.8;
+export const BRAKE_SECONDS = 1.25;
 export function advanceCover(clock: CoverClock, delta: number, stopped: boolean): CoverClock {
   const target = stopped ? 0 : 1;
   const duration = Math.abs(target - clock.speed) * BRAKE_SECONDS;

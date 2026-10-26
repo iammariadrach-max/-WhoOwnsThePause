@@ -1,7 +1,8 @@
 import { useEffect } from "react";
+import StaticTexture from "./StaticTexture";
 import { useLongread } from "../state/LongreadContext";
 export function GrainOverlay() {
-  return <div className="grain-overlay" aria-hidden="true" />;
+  return <StaticTexture />;
 }
 export function LightLeak() {
   return (

@@ -3,6 +3,8 @@ import { useElapsedTimer } from "../hooks/useElapsedTimer";
 import { now, countdown } from "../hooks/timing";
 import { PrimaryAction, SkipAction } from "./Actions";
 import { SectionShell, Content } from "./Shared";
+import IllustratedReading from "./IllustratedReading";
+import { MixedTitle } from "./EditorialType";
 export function CountdownDisplay({ value }: { value: number }) {
   return (
     <p className="countdown-display" aria-hidden="true">
@@ -24,7 +26,7 @@ export default function CountdownComparison() {
             <span className="meta">
               {i ? "СИТУАЦИЯ ВТОРАЯ" : "СИТУАЦИЯ ПЕРВАЯ"}
             </span>
-            <h3 className="lead">{title}</h3>
+            <h3 className="lead"><MixedTitle text={title} /></h3>
             <CountdownDisplay value={finished ? (i ? 10000 : 0) : value} />
             <p className="system-status">
               {finished
@@ -80,7 +82,7 @@ export default function CountdownComparison() {
           ? "После нуля код перестал действовать. Таймер скидки снова показывает 00:10. Что действительно произошло после нуля?"
           : "Оба таймера начнутся одновременно. Разница станет видна после нуля."}
       </p>
-      <Content part="countdown" className="reading-offset" />
+      <IllustratedReading part="countdown" />
     </SectionShell>
   );
 }

@@ -4,12 +4,19 @@ import { useLongread } from "../state/LongreadContext";
 export default function Navigation() {
   const { state, dispatch } = useLongread();
   const [current, setCurrent] = useState(0);
+  const [afterCover, setAfterCover] = useState(false);
   const currentIndex = useRef(0);
+  const coverEnded = useRef(false);
   const dialog = useRef<HTMLDialogElement>(null);
   const opener = useRef<HTMLButtonElement>(null);
   useEffect(() => {
     let frame = 0;
     const measure = () => {
+      const pastCover = (document.querySelector(".hero")?.getBoundingClientRect().bottom ?? Infinity) <= 1;
+      if (pastCover !== coverEnded.current) {
+        coverEnded.current = pastCover;
+        setAfterCover(pastCover);
+      }
       let next = 0;
       chapters.forEach(({ id }, i) => {
         if (
@@ -50,7 +57,7 @@ export default function Navigation() {
       <a className="skip-link" href="#main">
         К тексту
       </a>
-      <header className={`site-header ${current === 0 ? "is-cover" : ""}`}>
+      <header className={`site-header ${current === 0 ? "is-cover" : ""}${afterCover ? " is-reading" : ""}`}>
         <a
           className="wordmark"
           href="#opening"
@@ -72,14 +79,6 @@ export default function Navigation() {
           СОДЕРЖАНИЕ <span aria-hidden="true">+</span>
         </button>
       </header>
-      <nav className="chapter-rail" aria-label="Разделы лонгрида">
-        {chapters.map(({ id, number, title }, i) => (
-          <a key={id} href={`#${id}`} aria-label={`Раздел ${number}. ${title}`} aria-current={current === i ? "location" : undefined}
-            onClick={(e) => { e.preventDefault(); goTo(id, true); }}>
-            <span className="rail-number" aria-hidden="true">{number}</span><i aria-hidden="true" />
-          </a>
-        ))}
-      </nav>
       <dialog
         ref={dialog}
         id="contents"

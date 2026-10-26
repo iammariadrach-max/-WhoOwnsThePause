@@ -2,6 +2,7 @@ import { useLongread } from "../state/LongreadContext";
 import { copy, chapters } from "../content/longread";
 import { SectionShell, Content } from "./Shared";
 import { DestructiveAction, SecondaryAction } from "./Actions";
+import { MixedTitle } from "./EditorialType";
 export default function ControlDiagnostic() {
   const { state, dispatch } = useLongread();
   return (
@@ -11,9 +12,9 @@ export default function ControlDiagnostic() {
         <div className="diagnostic-object">
           <span className="meta">ОДИН ОБЪЕКТ / ПЯТЬ ВОПРОСОВ</span>
           <h3 className="lead">
-            {state.diagnosticCancelled
+            <MixedTitle text={state.diagnosticCancelled
               ? "Подготовка отменена"
-              : "Документ готовится"}
+              : "Документ готовится"} />
           </h3>
           <p className="system-status">
             {state.diagnosticCancelled
@@ -44,7 +45,7 @@ export default function ControlDiagnostic() {
                   }
                 >
                   <span className="meta">0{i + 1}</span>
-                  <span>{question}</span>
+                  <span><MixedTitle text={question} /></span>
                   <span aria-hidden="true">
                     {state.diagnostic === i ? "−" : "+"}
                   </span>

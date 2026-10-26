@@ -1,3 +1,4 @@
+import ReflectionField from "./ReflectionField";
 import { useLongread } from "../state/LongreadContext";
 import { now, countdown } from "../hooks/timing";
 import { useElapsedTimer } from "../hooks/useElapsedTimer";
@@ -14,11 +15,12 @@ export default function ControlPauseBridge() {
     <aside
       id="control-bridge"
       tabIndex={-1}
-      className="control-bridge dark scene-surface"
+      className="control-bridge dark scene-surface reflection-scene"
       {...sceneAttributes(2)}
       data-scene="control-bridge"
       aria-label="Переход от длительности к контролю"
     >
+      <ReflectionField variant="threshold" />
       <p className="meta">ДЛИТЕЛЬНОСТЬ → КОНТРОЛЬ</p>
       <p className="lead bridge-heading">{copy.bridge}</p>
       <div className="bridge-interaction">

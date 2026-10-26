@@ -2,7 +2,9 @@ import { useLongread } from "../state/LongreadContext";
 import { now } from "../hooks/timing";
 import { copy, chapters } from "../content/longread";
 import { PrimaryAction, SecondaryAction } from "./Actions";
-import { SectionShell, Content, goTo } from "./Shared";
+import { SectionShell, goTo } from "./Shared";
+import IllustratedReading from "./IllustratedReading";
+import { MixedTitle } from "./EditorialType";
 export default function UncertaintySection() {
   const { state, dispatch } = useLongread();
   const process = state.processes.background;
@@ -23,11 +25,11 @@ export default function UncertaintySection() {
             {clear ? "ЗАПРОС ПРИНЯТ" : "СТАТУС НЕИЗВЕСТЕН"}
           </span>
           <h3 className="section-title">
-            {process.status === "complete"
+            <MixedTitle text={process.status === "complete"
               ? "Файл готов."
               : clear
                 ? "Файл обрабатывается."
-                : "Подождите."}
+                : "Подождите."} />
           </h3>
           {clear && (
             <p className="body">
@@ -65,7 +67,7 @@ export default function UncertaintySection() {
           </div>
         </div>
       </div>
-      <Content part="uncertainty" className="reading-offset" />
+      <IllustratedReading part="uncertainty" />
       <p className="body question-tail">{copy.uncertaintyPrompt}</p>
     </SectionShell>
   );

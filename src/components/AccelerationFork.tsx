@@ -2,6 +2,8 @@ import { useRef } from "react";
 import { useInView } from "../hooks/useMotion";
 import { copy } from "../content/longread";
 import { SectionShell, Content } from "./Shared";
+import IllustratedReading from "./IllustratedReading";
+import { MixedTitle } from "./EditorialType";
 export default function AccelerationFork() {
   const ref = useRef<HTMLDivElement>(null);
   const visible = useInView(ref, 0.15, true);
@@ -25,7 +27,7 @@ export default function AccelerationFork() {
           {copy.forkNames.map((name, i) => (
             <div className={`fork-model fork-model-${i}`} key={name}>
               <span className="meta">МОДЕЛЬ {i ? "Б" : "А"}</span>
-              <h3 className="lead">{name}</h3>
+              <h3 className="lead"><MixedTitle text={name} /></h3>
               <p className="caption">{copy.forkCaptions[i]}</p>
               <div
                 className="fork-diagram"
@@ -64,7 +66,7 @@ export default function AccelerationFork() {
           ))}
         </div>
       </div>
-      <Content part="acceleration" className="reading-offset fork-text" />
+      <IllustratedReading part="acceleration" className="fork-text" />
     </SectionShell>
   );
 }

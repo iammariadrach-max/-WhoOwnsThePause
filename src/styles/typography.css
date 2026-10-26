@@ -1,0 +1,115 @@
+/* Six text roles. This is the final typography authority, after scene layout.
+ * 1. Existing composite headings are preserved by reading-grid.css.
+ * Animated numerals and non-text symbols belong to diagrams, not copy roles.
+ * The hero is excluded; its existing caption supplies role 2's reference values.
+ */
+#root {
+  --type-caption-size: 11px;
+  --type-caption-font: 400 var(--type-caption-size)/1.35 "IBM Plex Mono", monospace;
+  --type-caption-color: #92978a;
+  --type-body-size: calc(clamp(18px, 1.53vw, 25px) - 2px);
+  --type-body-font: 500 var(--type-body-size)/1.65 "Manrope", sans-serif;
+  --type-body-color: #c4c4ba;
+  --type-button-font: 500 16px/1.4 "Manrope", sans-serif;
+  --type-button-color: #c4c4ba;
+  --type-emphasis-size: 28px;
+  --type-emphasis-font: 500 var(--type-emphasis-size)/1.35 "Manrope", sans-serif;
+  --type-emphasis-color: #c4c4ba;
+  --type-fine-size: 10px;
+  --type-fine-font: 500 var(--type-fine-size)/1.4 "Manrope", sans-serif;
+  --type-fine-color: #92978a;
+}
+@media (max-width: 800px) {
+  #root { --type-body-size: 15px; --type-emphasis-size: 22px; }
+}
+@media (max-width: 700px) {
+  #root { --type-caption-size: 10px; --type-fine-size: 9px; }
+}
+
+/* 2 — Captions: identical to the cover's eyebrow. */
+#root :is(.intro-body, .section, .control-bridge, .part-transition, .longread-footer, .contents-dialog, .site-header.is-reading)
+:is(.type-caption, .meta, .micro-label, .caption, .system-status, .timecode, .timecode-rail, figcaption,
+.perception-readout-unit, .result-value > span:not(.sr-only), .sediment-threshold,
+.wordmark, .timecode > span, .overload-noise > span),
+#root .type-caption {
+  font: var(--type-caption-font) !important;
+  color: var(--type-caption-color) !important;
+  letter-spacing: .1px !important;
+  text-transform: uppercase !important;
+}
+
+/* 3 — Body: the exact size, weight, tracking and leading of screen two. */
+#root :is(.intro-body, .section, .control-bridge, .part-transition, .longread-footer, .contents-dialog)
+:is(.type-body, .body, .body-copy, .editorial-list, .editorial-quote),
+#root .type-body {
+  font: var(--type-body-font) !important;
+  color: var(--type-body-color) !important;
+  letter-spacing: -.012em !important;
+  text-transform: none !important;
+}
+
+/* 4 — Every text control uses one label style. States use borders/opacity. */
+#root :is(.intro-body, .section, .control-bridge, .part-transition, .longread-footer, .contents-dialog, .site-header.is-reading)
+:is(.type-button, .action, .choice-options label, .disclosure summary, .diagnostic-row button,
+.footer-link, .source-back, .close-button, .menu-button),
+#root .contents-dialog nav a,
+#root:has(.site-header.is-reading) .skip-link,
+#root .type-button {
+  font: var(--type-button-font) !important;
+  color: var(--type-button-color) !important;
+  letter-spacing: -.01em !important;
+  text-transform: none !important;
+}
+
+/* 5 — Important passages, subheads and invitations to act. */
+#root :is(.intro-body, .section, .control-bridge, .part-transition, .longread-footer, .contents-dialog)
+:is(.type-emphasis, .lead, .body-large, .instruction, .sticky-phrase, .pullquote),
+#root .silence-copy > p:first-child,
+#root .type-emphasis {
+  font: var(--type-emphasis-font) !important;
+  color: var(--type-emphasis-color) !important;
+  letter-spacing: -.02em !important;
+  text-transform: none !important;
+}
+
+/* 6 — Small Manrope notes: references, diagram labels and background status. */
+#root :is(.intro-body, .section, .control-bridge, .part-transition, .longread-footer, .contents-dialog)
+:is(.type-fine, .source-marker, .privacy, .eta-stop > span, .eta-arrival > .caption,
+.labor-block > span, .free-space > span, .operation-grid span,
+.track-events:not(.waiting-events) > span, .fork-stream > span),
+#root:has(.site-header.is-reading) .global-status > div,
+#root .type-fine {
+  font: var(--type-fine-font) !important;
+  color: var(--type-fine-color) !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+
+/* Neutralize former inline variants so a role stays identical in every scene.
+ * Composite title accents and oversized readout digits are deliberately separate.
+ */
+#root :is(.intro-body, .section, .control-bridge, .part-transition, .longread-footer, .contents-dialog, .site-header.is-reading)
+:is(.meta, .caption, .system-status, .micro-label, .timecode-rail, .body, .body-copy,
+.lead, .body-large, .instruction, .action, .choice-options label, .disclosure summary,
+.diagnostic-row button, .source-marker, .wordmark, .menu-button, .type-caption, .type-body,
+.type-button, .type-emphasis, .type-fine)
+> :is(span, em, strong, b, a, i):not(.source-marker, .meta, [aria-hidden="true"]),
+#root:has(.site-header.is-reading) .global-status > div > span {
+  font: inherit !important;
+  color: inherit !important;
+  letter-spacing: inherit !important;
+  text-transform: inherit !important;
+}
+#root .diagnostic-row button > span > .serif-accent,
+#root .contents-dialog nav a > span:not(.meta) {
+  font: inherit !important;
+  color: inherit !important;
+  letter-spacing: inherit !important;
+  text-transform: inherit !important;
+}
+
+/* Keep the picture/copy baseline tied to the shared body size. */
+#root :is(.intro-body, .section > .illustrated-reading) { --intro-copy-size: var(--type-body-size); }
+
+
+#root:has(.site-header.is-reading) .skip-link { background: #0a0b0a; }
