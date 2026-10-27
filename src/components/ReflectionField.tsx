@@ -12,13 +12,15 @@ export default function ReflectionField({ variant, paused = false }: { variant: 
   const wake = useRef<() => void>(() => {});
   const { state: { reducedMotion, pageMotionPaused } } = useLongread();
   useEffect(() => {
+    // The closing signature keeps drifting after the reading experience ends.
+    const scenePaused = variant !== "colophon" && pageMotionPaused;
     controls.current = {
-      targetSpeed: coverShouldStop(paused, reducedMotion, pageMotionPaused) ? 0 : 1,
-      immediate: reducedMotion || pageMotionPaused,
-      mode: reducedMotion ? "reduced" : pageMotionPaused ? "page-paused" : paused ? "manual" : "drifting",
+      targetSpeed: coverShouldStop(paused, reducedMotion, scenePaused) ? 0 : 1,
+      immediate: reducedMotion || scenePaused,
+      mode: reducedMotion ? "reduced" : scenePaused ? "page-paused" : paused ? "manual" : "drifting",
     };
     wake.current();
-  }, [paused, reducedMotion, pageMotionPaused]);
+  }, [paused, reducedMotion, pageMotionPaused, variant]);
 
   // One clock per scene, preserved through pause/resume and shader updates.
   // Offscreen scenes and hidden tabs do not run an animation loop.

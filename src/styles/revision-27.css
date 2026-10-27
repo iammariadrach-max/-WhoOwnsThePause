@@ -2,8 +2,8 @@
 #root { --reading-edge: 52px; }
 #root :is(.section,.intro-body,.control-bridge,.part-transition,.longread-footer) {
   --layout-columns: 8; --layout-gap: 20px; --page-margin: 52px;
-  --type-body-size: 17px; --type-body-font: 400 17px/1.6 "Manrope",sans-serif;
-  --type-emphasis-font: 400 17px/1.6 "Manrope",sans-serif;
+  --type-body-size: 17px; --type-body-font: 400 17px/1.68 "Manrope",sans-serif;
+  --type-emphasis-font: 400 17px/1.68 "Manrope",sans-serif;
   grid-template-columns: repeat(8,minmax(0,1fr)); column-gap: 20px; padding-inline: 52px;
 }
 /* Cover and final signature alone retain their optical tracking. */
@@ -13,7 +13,7 @@
 }
 #root .hero-subtitle { text-align: left; }
 #root :is(.intro-body,.reading-revision) :is(.body,.body-copy,.lead,.instruction,.body-large,.editorial-list,.editorial-quote,.source-note) {
-  font: 400 17px/1.6 "Manrope",sans-serif !important;
+  font: 400 17px/1.68 "Manrope",sans-serif !important;
 }
 #root .reading-revision .chapter-composition { line-height: 1; }
 #root .reading-revision .chapter-composition > em {
@@ -189,7 +189,7 @@
   #root .waiting-choice.reflection-scene > :not(.reflection-field) { grid-column:1 / -1; }
   #root .reading-revision .overload-field { grid-template-columns:repeat(8,minmax(0,1fr)); }
   #root .control-bridge .scene-figure { grid-column:1 / -1; }
-  #root .footer-signature .footer-bottom .meta { font-size:8px !important; }
+  #root .footer-signature .footer-bottom .meta { font-size:11px !important; }
 }
 
 /* Grid items must shrink inside their assigned columns, including long source
@@ -208,3 +208,122 @@
   #root .control-bridge .bridge-heading .desktop-line { display: inline; }
   #root .pause-study--forecast .eta-stop span { white-space: normal; }
 }
+
+/* Final reference adjustments. Prose spans three of the eight desktop columns. */
+@media(min-width:701px) {
+  #root .intro-reading,
+  #root .reading-revision .illustrated-reading-copy { grid-column: 5 / 8; }
+}
+#root#root .contents-dialog .close-button {
+  display: grid; place-items: center; flex: 0 0 48px;
+  box-sizing: border-box; width: 48px; height: 48px; min-width: 48px;
+  padding: 0; line-height: 1; text-align: center !important;
+}
+/* Fade within the section, before any clipping boundary. */
+#root .perception > .reflection-field {
+  inset: 44% 0 0;
+  mask-image: linear-gradient(transparent, #000 20%, #000 55%, transparent 100%);
+}
+#root .experiment-console > .reflection-field {
+  inset: -10% 0 0 20%;
+  mask-image: radial-gradient(ellipse at 60% 48%, #000 15%, transparent 70%);
+}
+/* Announce background results to assistive technology without a fixed banner. */
+#root .global-status,
+#root .global-status.has-status {
+  position: absolute; width: 1px; height: 1px; min-height: 0;
+  padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%);
+  border: 0; white-space: nowrap; pointer-events: none;
+}
+#root .overload-field.is-clear .status-title,
+#root .overload-field.is-clear .reading-link {
+  font: 400 17px/1.68 "Manrope", sans-serif !important;
+  color: #c4c4ba; letter-spacing: 0;
+}
+#root .overload-field.is-clear .status-title { margin: 0 0 24px; }
+#root .overload-field.is-clear .reading-link {
+  display: inline; text-decoration: underline; text-underline-offset: 4px;
+}
+#root .reading-revision .diagnostic-row:not(.is-selected) button {
+  background: #ece9df; border-color: #ece9df; --type-button-color: #171a16;
+  color: #171a16 !important;
+}
+#root .reading-revision .diagnostic-row:not(.is-selected) button * { color: #171a16 !important; }
+#root .reading-revision .diagnostic-row:not(.is-selected) button:hover { background: #fff; }
+#root .longread-footer .footer-signature {
+  height: auto; aspect-ratio: 1440 / 560; min-height: 0;
+  padding: 30px 52px 16px; isolation: isolate;
+}
+#root .longread-footer .footer-title { display: block; }
+#root .longread-footer .footer-title > span {
+  display: block; font: italic 300 12.7vw/.93 "Cormorant", serif;
+  color: #8b8c83; letter-spacing: -.035em !important;
+}
+#root .longread-footer .footer-title > em {
+  display: block; margin-left: 43.5%; font: 400 11.1vw/1 "Manrope", sans-serif;
+  color: #b9bab1; letter-spacing: -.055em !important; text-transform: uppercase;
+}
+#root .footer-signature > .reflection-field {
+  inset: 0; mask-image: none; background: #0a0b0a;
+}
+#root .footer-signature .footer-bottom { display: grid; grid-template-columns: 1fr auto 1fr; }
+#root .footer-signature .footer-bottom > :last-child { justify-self: end; }
+@media(max-width:700px) {
+  #root .longread-footer .footer-signature { min-height: 260px; padding: 28px 24px 16px; }
+  #root .longread-footer .footer-title > span { font-size: 13vw; }
+  #root .longread-footer .footer-title > em { font-size: 13vw; margin-left: 42%; }
+  #root .footer-signature .footer-bottom { gap: 8px; }
+}
+#root .longread-footer .footer-signature {
+  box-sizing: border-box; min-width: 0; width: calc(100% + 104px);
+}
+
+/* The light must reach zero opacity on every boundary, including the right edge. */
+#root .experiment-console > .reflection-field {
+  mask-image: linear-gradient(90deg, transparent, #000 20%, #000 65%, transparent 100%),
+    linear-gradient(transparent, #000 20%, #000 65%, transparent 100%);
+  mask-composite: intersect;
+}
+/* Repeat the models while visible; retain their static meaning when paused. */
+#root .fork-stream { flex-wrap: wrap; overflow: visible; margin-inline: 0; padding: 8px 0; }
+#root .fork-stream > span { animation: none; opacity: 1; }
+#root .fork-scene.in-view .fork-stream > span {
+  animation: work-card-drift 3.6s ease-in-out infinite;
+}
+#root .fork-stream > span:nth-child(2n) { animation-delay: -.6s !important; }
+#root .fork-stream > span:nth-child(3n) { animation-delay: -1.2s !important; }
+#root .fork-scene .operation-grid i { animation: none; }
+#root .fork-scene.in-view .operation-grid i { animation: operation-compress 5s ease-in-out infinite; }
+#root .fork-scene.in-view .operation-grid i:nth-child(n+4) { animation-delay: .45s; }
+#root .fork-scene.in-view .operation-grid i:nth-child(n+7) { animation-delay: .8s; }
+#root .fork-scene.in-view .operation-grid i:nth-child(n+10) { animation-delay: 1.05s; }
+#root .fork-scene.in-view .labor-block { animation: labor-release 6s ease-in-out infinite; }
+@keyframes work-card-drift { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+@keyframes labor-release { 0%,15%,100% { flex-basis: 70%; } 55%,85% { flex-basis: 26%; } }
+html[data-motion="paused"] #root .fork-scene :is(.fork-stream > span,.operation-grid i,.labor-block) { animation: none; transform: none; }
+@media(prefers-reduced-motion:reduce) {
+  #root .fork-scene :is(.fork-stream > span,.operation-grid i,.labor-block) { animation: none !important; transform: none; }
+}
+/* The cover's 11 px caption size is shared at all viewport widths. */
+#root { --type-caption-size: 11px; }
+#root .hero :is(.cover-motion,.cover-forward) { font-size: 11px; }
+@media(max-width:700px) {
+  #root .footer-signature .footer-bottom { grid-template-columns: 1fr auto; }
+  #root .footer-signature .footer-bottom > :nth-child(2) { grid-column: 1; grid-row: 2; }
+  #root .footer-signature .footer-bottom > :last-child { grid-column: 2; grid-row: 1; }
+}
+#root .site-header.is-cover .menu-button,
+#root .site-header.is-cover .menu-button > span,
+#root .exposure-transition > span { font-size: 11px; }
+
+/* Fill the assigned columns all the way to the page's right padding. */
+#root .fork-scene > .fork-stream {
+  display: grid; grid-template-columns: repeat(7, minmax(0, 1fr));
+  width: 100%; max-width: none; gap: 7px;
+}
+#root .fork-stream > span { min-width: 0; padding-inline: 4px; text-align: center !important; }
+@media(max-width:700px) {
+  #root .fork-scene > .fork-stream { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+/* Let the same global grain plane cover the closing light, as on the hero. */
+#root .longread-footer .footer-signature { isolation: auto; z-index: auto; }

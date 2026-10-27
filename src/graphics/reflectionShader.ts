@@ -84,14 +84,14 @@ void main() {
     warm=soft(p.y-line-.10,.20)*.55;
     shadow=soft(p.y-line+.14,.06)*.4;
   } else if (SCENE == 9) {
-    // Layers drift sideways; no cyclic cut or jump at the loop boundary.
-    p.x+=.14*sin(t*.25);
-    float line=.71+.09*sin(p.x*5.+t*.22)+.02*n;
-    fold=soft(p.y-line,.065)*.62;
-    fold+=soft(p.y-.38-.075*sin(p.x*3.7-t*.18),.055)*.25;
-    haze=veil(p,vec2(.20+.18*sin(t*.19),.22),vec2(.75,.38))*.56;
-    warm=veil(p,vec2(.65+.12*sin(t*.27),.60),vec2(.70,.26))*.7;
-    shadow=soft(p.y-line+.12,.07)*.45;
+    // A single low, drifting reflection leaves both title lines in darkness.
+    float line=.79+.045*sin(p.x*4.5-t*.28)+.012*n;
+    // Keep the low reflection visible through the right edge of the screen.
+    float taper=1.;
+    fold=soft(p.y-line,.055)*taper*.95;
+    haze=soft(p.y-line+.025,.115)*taper*.50;
+    warm=soft(p.y-line+.12,.15)*taper*.38;
+    shadow=soft(p.y-line-.11,.055)*.40;
   } else if (SCENE == 10) {
     float line=.57+.12*sin(p.x*4.-t*.22);
     fold=soft(p.y-line,.075)*smoothstep(.25,.90,p.x)*.50;

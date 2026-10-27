@@ -7,8 +7,8 @@
   --type-caption-size: 11px;
   --type-caption-font: 400 var(--type-caption-size)/1.35 "IBM Plex Mono", monospace;
   --type-caption-color: #92978a;
-  --type-body-size: calc(clamp(18px, 1.53vw, 25px) - 2px);
-  --type-body-font: 500 var(--type-body-size)/1.65 "Manrope", sans-serif;
+  --type-body-size: 17px;
+  --type-body-font: 400 var(--type-body-size)/1.68 "Manrope", sans-serif;
   --type-body-color: #c4c4ba;
   --type-button-font: 500 16px/1.4 "Manrope", sans-serif;
   --type-button-color: #c4c4ba;
@@ -20,10 +20,10 @@
   --type-fine-color: #92978a;
 }
 @media (max-width: 800px) {
-  #root { --type-body-size: 15px; --type-emphasis-size: 22px; }
+  #root { --type-emphasis-size: 22px; }
 }
 @media (max-width: 700px) {
-  #root { --type-caption-size: 10px; --type-fine-size: 9px; }
+  #root { --type-fine-size: 9px; }
 }
 
 /* 2 — Captions: identical to the cover's eyebrow. */

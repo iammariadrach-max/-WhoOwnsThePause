@@ -6,7 +6,7 @@ import IllustratedReading from "./IllustratedReading";
 import { MixedTitle } from "./EditorialType";
 export default function AccelerationFork() {
   const ref = useRef<HTMLDivElement>(null);
-  const visible = useInView(ref, 0.15, true);
+  const visible = useInView(ref, 0.05);
   return (
     <SectionShell zone={13} className="dark acceleration">
       <Content part="accelerationIntro" />
@@ -17,7 +17,7 @@ export default function AccelerationFork() {
       >
         <p className="lead fork-origin">Технология стала быстрее.</p>
         <div className="fork-stream" aria-hidden="true">
-          {Array.from({ length: 8 }, (_, i) => (
+          {Array.from({ length: 7 }, (_, i) => (
             <span key={i}>0{i + 1} / WORK</span>
           ))}
         </div>

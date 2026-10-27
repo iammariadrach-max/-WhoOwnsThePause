@@ -12,7 +12,6 @@ export function useCoverTitleFit() {
 
     const context = document.createElement('canvas').getContext('2d')
     if (!context) return
-    const status = document.querySelector<HTMLElement>('.global-status')
     let frame = 0
     let disposed = false
 
@@ -24,11 +23,9 @@ export function useCoverTitleFit() {
       const baseline = (parseFloat(style.lineHeight)
         + glyph.fontBoundingBoxAscent - glyph.fontBoundingBoxDescent) / 2
       const top = word.getBoundingClientRect().top - title.getBoundingClientRect().top
-      const reserved = status?.classList.contains('has-status')
-        ? status.getBoundingClientRect().height : 0
       const inkBottom = top + baseline + glyph.actualBoundingBoxDescent
       // One pixel protects the anti-aliased edge; otherwise keep the original layout.
-      const lift = Math.max(0, Math.ceil(inkBottom - (hero.clientHeight - reserved) + 1))
+      const lift = Math.max(0, Math.ceil(inkBottom - hero.clientHeight + 1))
       title.style.setProperty('--cover-title-lift', `${lift}px`)
     }
     const schedule = () => {
@@ -38,9 +35,6 @@ export function useCoverTitleFit() {
     const resize = new ResizeObserver(schedule)
     resize.observe(hero)
     resize.observe(word)
-    if (status) resize.observe(status)
-    const statusChanges = new MutationObserver(schedule)
-    if (status) statusChanges.observe(status, { attributes: true, attributeFilter: ['class'] })
     document.fonts.addEventListener('loadingdone', schedule)
     document.fonts.ready.then(() => { if (!disposed) schedule() })
     fit()
@@ -49,7 +43,6 @@ export function useCoverTitleFit() {
       disposed = true
       cancelAnimationFrame(frame)
       resize.disconnect()
-      statusChanges.disconnect()
       document.fonts.removeEventListener('loadingdone', schedule)
     }
   }, [])

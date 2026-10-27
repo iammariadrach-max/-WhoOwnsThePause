@@ -59,9 +59,9 @@ export function OverloadedPause() {
               Убрать всё
             </SecondaryAction>
           ) : (
-            <SecondaryAction onClick={() => goTo("optional-pause")}>
+            <a className="reading-link" href="#optional-pause" onClick={(event) => { event.preventDefault(); goTo("optional-pause"); }}>
               Можно продолжить чтение
-            </SecondaryAction>
+            </a>
           )}
         </div>
       </div>
