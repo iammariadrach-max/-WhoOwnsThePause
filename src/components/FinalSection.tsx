@@ -3,34 +3,19 @@ import { useLongread } from "../state/LongreadContext";
 import { copy, chapters } from "../content/longread";
 import { SectionShell } from "./Shared";
 import IllustratedReading from "./IllustratedReading";
-import { PauseAction } from "./Actions";
 import { TimerExperience } from "./PerceptionTimer";
 import { AfterimageText, MixedTitle, TimecodeRail } from "./EditorialType";
 export default function FinalSection() {
-  const { state, dispatch } = useLongread();
+  const { state } = useLongread();
   return (
-    <SectionShell zone={15} className="light final-section">
-      <p className="lead">
+    <SectionShell zone={15} className="light final-section" image="final" intro={<p className="lead">
         {state.timers.first.result === null
           ? copy.firstMissing
           : copy.finalIntro}
-      </p>
+      </p>}>
       <TimerExperience variant="second" />
       <p className="caption">Или не делать.</p>
       <IllustratedReading part="final" className="final-copy" />
-      <div className="page-pause">
-        <PauseAction
-          aria-pressed={state.pageMotionPaused}
-          onClick={() => dispatch({ type: "toggleMotion" })}
-        >
-          {state.pageMotionPaused
-            ? "Продолжить движение"
-            : "Поставить страницу на паузу"}
-        </PauseAction>
-        <p className="caption" role="status">
-          {state.pauseChosen ? "Эту паузу выбрали вы." : ""}
-        </p>
-      </div>
       <div
         id="finale"
         tabIndex={-1}

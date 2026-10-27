@@ -18,8 +18,7 @@ export default function CountdownComparison() {
   const finished = timer.status === "complete" || timer.status === "cancelled";
   const value = timer.status === "idle" ? 10000 : timer.remaining;
   return (
-    <SectionShell zone={8} className="light countdown">
-      <Content part="countdownIntro" />
+    <SectionShell zone={8} className="light countdown" image="timerDial" intro={<Content part="countdownIntro" />}>
       <div className="countdown-split">
         {["Код подтверждения", "Скидка закончится"].map((title, i) => (
           <div key={title}>

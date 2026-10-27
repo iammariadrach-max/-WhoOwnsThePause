@@ -1,0 +1,169 @@
+/* Reference layout. Deliberately scoped outside .opening: the first two
+   screens, cover renderer, intro typography and shared tokens are untouched. */
+#root .reading-revision {
+  --type-button-color: #171a16;
+  position: relative;
+}
+#root .section.reading-revision { padding-block: clamp(72px, 8vw, 128px); }
+#root .reading-revision > .section-meta { display: none; }
+#root .reading-revision .chapter-composition {
+  display: flex; flex-direction: column; width: fit-content; max-width: 100%;
+  font: 500 clamp(36px,4.6vw,72px)/1.04 var(--font-main);
+  letter-spacing: -.055em; color: #b9bab1; text-transform: uppercase;
+}
+#root .reading-revision .chapter-composition > em {
+  margin-left: clamp(38px,12vw,172px); padding-block: .04em .02em;
+  font: italic 300 1.06em/.98 "Cormorant", Georgia, serif;
+  letter-spacing: -.035em; color: #7c7e74; text-transform: none;
+}
+#root .reading-revision .chapter-composition > span:last-child {
+  margin-left: clamp(38px,12vw,172px); font-size: .76em;
+}
+#root .reading-revision h2.section-title { max-width: none; line-height: 1.05; }
+#root .reading-revision .action,
+#root .reading-revision .disclosure summary {
+  background: #eeeee5; border-color: #eeeee5; color: #171a16 !important;
+  padding: 11px 20px; min-height: 44px;
+}
+#root .reading-revision .action:hover:not(:disabled),
+#root .reading-revision .disclosure summary:hover { background: #fff; border-color: #fff; }
+#root .reading-revision .choice-options label > span,
+#root .reading-revision .waiting-modes .action,
+#root .reading-revision .diagnostic-row button {
+  border: 1px solid #74786b; background: transparent;
+  color: #c4c4ba !important; box-shadow: none; min-height: 44px;
+}
+#root .reading-revision .choice-options label:hover > span,
+#root .reading-revision .waiting-modes .action:hover,
+#root .reading-revision .diagnostic-row button:hover { background: #c4c4ba0c; border-color: #c4c4ba; }
+#root .reading-revision .choice-options input:checked + span,
+#root .reading-revision .waiting-modes .action[aria-pressed="true"],
+#root .reading-revision .diagnostic-row.is-selected button {
+  background: #c4c4ba0c; border-color: #eee; box-shadow: inset 3px 0 #c4c4ba;
+}
+#root .reading-revision .diagnostic-row button .meta { color: #92978a !important; }
+#root .reading-revision .choice-options { gap: 14px; }
+#root .reading-revision .choice-options label > span { width: 100%; }
+#root .reading-revision .reflection-field { position: absolute; z-index: 0; }
+#root .reading-revision > .reflection-field { pointer-events: none; }
+#root .perception { min-height: 760px; overflow: clip; }
+#root .perception-layout { min-height: 540px; margin-top: 0; align-items: end; }
+#root .perception-copy { grid-column: 1 / 7; }
+#root .perception-copy .timer-experience { margin-top: 80px; max-width: 36ch; }
+#root .perception-copy .after-note { max-width: 37ch; }
+#root .perception-readout { grid-column: 8 / 12; width: 100%; aspect-ratio: auto; min-height: 280px; margin-bottom: 20px; }
+#root .perception-readout::before { display: none; }
+#root .perception-readout-number { font-size: 67cqw; text-shadow: none; }
+#root .perception-readout-unit { display: none; }
+#root .perception > .reflection-field { inset: 48% calc(-1 * var(--reading-edge)) -12%; }
+#root .control-bridge.reflection-scene { min-height: 600px; padding-block: 100px 120px; align-content: start; }
+#root .control-bridge > .scene-figure { grid-column: 1 / 3; grid-row: 1 / 5; }
+#root .control-bridge .scene-image { aspect-ratio: 2 / 3; }
+#root .control-bridge.reflection-scene > .meta { display: none; }
+#root .control-bridge.reflection-scene > :is(.bridge-heading,.bridge-interaction,.bridge-caption) { grid-column: 7 / 12; max-width: none; }
+#root .control-bridge.reflection-scene > .bridge-heading { grid-row: 1; margin-bottom: 28px; }
+#root .control-bridge.reflection-scene > .bridge-interaction { grid-row: 2; }
+#root .control-bridge.reflection-scene > .bridge-caption { grid-row: 3; margin-top: 28px; }
+#root .control-bridge .choice-options { flex-direction: column; width: min(100%,320px); }
+#root .control-bridge .choice-options label { width: 100%; }
+#root .control-bridge .bridge-interaction .instruction { margin-bottom: 24px; }
+#root .attention { padding-top: 64px; }
+#root .attention > .section-title { margin-bottom: 84px; }
+#root .attention > .reflection-field { inset: 120px calc(-1 * var(--reading-edge)) auto; height: 440px; }
+#root .attention .attention-tracks { margin-top: 72px; margin-bottom: 150px; }
+#root .attention .attention-track { display: flex; flex-direction: column; }
+#root .attention .track-heading { order: 3; margin: 24px 0 0; }
+#root .attention .track-heading h3 { font-size: var(--type-body-size); }
+#root .attention .track-heading .system-status { display: none; }
+#root .attention .track-events { height: 48px; order: 1; margin-bottom: 12px; }
+#root .attention .interval-line { order: 2; }
+#root .attention .attention-track > .meta { order: 4; margin-top: 6px; }
+#root .attention .attention-memory { min-height: 440px; margin-top: 100px; padding-block: 40px 160px; }
+#root .attention .attention-questions .choice legend { min-height: 3.4em; }
+#root .attention .attention-questions .choice-options { width: 320px; max-width: 100%; display: grid; grid-template-columns: 1fr 1fr; }
+#root .attention .attention-questions .choice-options > :last-child { grid-column: 1 / -1; }
+#root .section > .illustrated-reading { margin-block: 72px 80px; }
+#root .reading-revision .reading-figure { grid-column: 1 / 3; width: 100%; margin: 0; }
+#root .reading-revision .reading-image { width: 100%; aspect-ratio: 2 / 3; }
+#root .reading-revision .reading-image img { width: 100%; height: 100%; object-fit: cover; }
+#root .reading-revision .illustrated-reading-copy { grid-column: 7 / 12; }
+#root .section > .scene-introduction { align-items: start; margin-bottom: 96px; }
+#root .reading-revision .scene-introduction-copy { grid-column: 1 / 8; }
+#root .reading-revision .scene-introduction-copy > .section-title { margin-bottom: 80px; }
+#root .reading-revision .scene-figure { grid-column: 9 / -1; }
+#root .reading-revision .scene-image { aspect-ratio: 4 / 5; }
+#root .control-bridge > .scene-figure { grid-column: 1 / 3; }
+#root .control-bridge .scene-image { aspect-ratio: 2 / 3; }
+#root .uncertainty .scene-introduction-copy .chapter-composition > :last-child { align-self: end; }
+#root .reading-revision .message-field { display: flex; flex-direction: column; align-items: start; justify-content: start; min-height: 480px; padding: 0 0 120px; gap: 24px; }
+#root .message-field .message-status { display: contents; }
+#root .message-field .message-status > .meta { display: none; }
+#root .message-field .message-status > .section-title { order: 1; text-align: left; font-size: 64px; }
+#root .message-field .message-status > .section-title .serif-accent { display: block; margin-top: 12px; font-size: 1.12em; }
+#root .message-field .message-status > .body { order: 3; max-width: 35ch; }
+#root .message-field .message-actions { display: contents; }
+#root .message-field .message-actions > .actions { order: 2; justify-content: start; }
+#root .message-field .message-actions > .caption { order: 4; max-width: 40ch; }
+#root .message-field > .reflection-field { inset: 5% calc(-1 * var(--reading-edge)) -5%; }
+#root .message-field > :not(.reflection-field) { position: relative; z-index: 2; }
+#root .uncertainty > .illustrated-reading { margin-top: 64px; }
+/* Continue the reference's quiet rhythm in the chapters absent from the image. */
+#root .reading-revision .pause-study--percent { min-height: 520px; }
+#root .reading-revision .pause-study--percent .huge-percent { font-size: clamp(110px,14vw,210px); }
+#root .reading-revision .pause-study--percent .pause-study-object { width: 100%; }
+#root .reading-revision .countdown-split > div { border: 0; border-top: 1px solid #74786b66; aspect-ratio: auto; min-height: 360px; padding: 32px 0; }
+#root .reading-revision .rest-manifesto .section-title { font-size: clamp(40px,6vw,90px); }
+#root .reading-revision .responsibility-layout { margin-top: 80px; }
+#root .reading-revision .responsibility-layout > .body-copy { grid-column: 7 / 12; }
+#root .longread-footer .footer-title > span { font: italic 300 clamp(64px,13vw,200px)/.9 "Cormorant",serif; text-transform: none; color: #7c7e74; }
+#root .longread-footer .footer-title > em { grid-column: 6 / -1; font: 500 clamp(64px,11vw,170px)/1 var(--font-main); text-transform: uppercase; color: #b9bab1; }
+#root .longread-footer .source-list .source-title { font: 500 18px/1.5 var(--font-main); color: #c4c4ba; }
+#root .longread-footer .source-list .source-note { margin-top: 16px; font: 500 15px/1.65 var(--font-main); color: #92978a; text-transform: none; }
+#root .longread-footer .source-list li { padding-block: 28px; }
+#root .longread-footer .source-list .source-link { display: inline-block; margin-top: 16px; }
+@media(max-width:700px) {
+  #root .section.reading-revision { padding-block: 64px; }
+  #root .reading-revision .chapter-composition { font-size: clamp(28px,6.9vw,48px); }
+  #root .reading-revision .chapter-composition > em,
+  #root .reading-revision .chapter-composition > span:last-child { margin-left: 12vw; }
+  #root .perception-layout { min-height: 0; row-gap: 40px; }
+  #root .perception-copy { display: contents; }
+  #root .perception-copy .timer-experience { margin-top: 0; }
+  #root .perception-copy .after-note { margin: 0; }
+  #root .perception-readout { grid-column: 1 / -1; width: 60%; min-height: 200px; justify-self: end; }
+  #root .control-bridge.reflection-scene { min-height: 0; padding-block: 64px 88px; row-gap: 28px; }
+  #root .control-bridge > .scene-figure { grid-column: 1 / 3; grid-row: 1; max-width: 180px; }
+  #root .control-bridge.reflection-scene > :is(.bridge-heading,.bridge-interaction,.bridge-caption) { grid-column: 1 / -1; grid-row: auto; margin: 0; }
+  #root .attention > .section-title { margin-bottom: 64px; }
+  #root .attention .attention-tracks { margin-block: 48px 64px; }
+  #root .attention .attention-memory { margin-top: 48px; padding-bottom: 100px; }
+  #root .attention .attention-questions .choice legend { min-height: 0; }
+  #root .reading-revision .reading-figure { grid-column: 1 / 3; max-width: 180px; }
+  #root .reading-revision .illustrated-reading-copy { grid-column: 1 / -1; margin-top: 36px; }
+  #root .section > .illustrated-reading { margin-block: 48px; }
+  #root .reading-revision .scene-introduction-copy { grid-column: 1 / -1; }
+  #root .reading-revision .scene-introduction-copy > .section-title { margin-bottom: 40px; }
+  #root .reading-revision .scene-figure { grid-column: 2 / -1; }
+  #root .control-bridge > .scene-figure { grid-column: 1 / 3; }
+  #root .reading-revision .message-field { min-height: 380px; padding-bottom: 64px; }
+  #root .message-field .message-status > .section-title { font-size: 44px; }
+  #root .reading-revision .responsibility-layout > .body-copy { grid-column: 1 / -1; }
+  #root .reading-revision .countdown-split > div { min-height: 300px; }
+}
+#root .longread-footer .footer-signature { position: relative; margin-inline: calc(-1 * var(--reading-edge)); padding: 64px var(--reading-edge) 28px; min-height: 600px; border-top: 1px solid #74786b44; }
+#root .footer-signature > :not(.reflection-field) { position: relative; z-index: 2; }
+#root .footer-signature .footer-title { margin-top: 0; }
+#root .footer-signature .footer-bottom { border: 0; margin-top: 160px; }
+@media(max-width:700px) { #root .longread-footer .footer-signature { min-height: 420px; padding-top: 48px; } }
+#root main > .exposure-transition { display: none; }
+#root .reading-revision .pause-study--forecast .eta-title { grid-column: 1 / -1; max-width: none; margin-bottom: 40px; }
+/* Preserve a quiet surface when WebGL is unavailable. */
+#root .reading-revision .reflection-field:has(canvas[data-renderer="unavailable"]) { background: radial-gradient(ellipse at 65% 65%, #48574a66, transparent 65%); }
+/* Controls inherit their role color through the shared typography layer. */
+#root .reading-revision .choice-options label { --type-button-color: #c4c4ba; color: #c4c4ba !important; }
+#root .reading-revision .waiting-modes .action,
+#root .reading-revision .diagnostic-row button { --type-button-color: #c4c4ba; }
+#root .perception > .reflection-field,
+#root .attention > .reflection-field { inset-inline: 0; }
+#root .reading-revision { background-color: #0b0d0b; }
+#root .perception { scroll-margin-top: 0; }

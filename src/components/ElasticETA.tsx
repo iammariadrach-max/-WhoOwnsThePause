@@ -2,45 +2,39 @@ import { useLongread } from "../state/LongreadContext";
 import { copy, chapters } from "../content/longread";
 import { SectionShell, Content, Disclosure } from "./Shared";
 import { SecondaryAction } from "./Actions";
-import { AfterimageText, MicroLabel, MixedTitle } from "./EditorialType";
+import { AfterimageText, MixedTitle, ChapterTitle } from "./EditorialType";
 import IllustratedReading from "./IllustratedReading";
 export default function ElasticETA() {
   const { state, dispatch } = useLongread();
   const updated = state.etaState === "updated" || state.reducedMotion;
   return (
     <SectionShell zone={7} className="light eta" title={false}>
-      <div className="eta-layout">
+      <div className="eta-layout pause-study--forecast">
         <div className="eta-reading">
           <h2 id="eta-title" className="section-title eta-title">
-            <MixedTitle text={chapters[6].title} />
+            <ChapterTitle zone={7} text={chapters[6].title} />
           </h2>
-          <h3 className="lead"><MixedTitle text={chapters[6].body[0]} /></h3>
-          <Content part="etaIntro" />
-          <p className="caption">
-            Иллюстративная сцена: ждать две реальные минуты не нужно.
-          </p>
-          <SecondaryAction
-            onClick={() =>
-              dispatch({
-                type: "set",
-                key: "etaState",
-                value: updated ? "initial" : "updated",
-              })
-            }
-          >
-            {updated ? "Вернуться к первому прогнозу" : "Две минуты спустя"}
-          </SecondaryAction>
+          <div className="eta-intro">
+            <h3 className="lead"><MixedTitle text={chapters[6].body[0]} /></h3>
+            <Content part="etaIntro" />
+            <SecondaryAction
+              onClick={() =>
+                dispatch({
+                  type: "set",
+                  key: "etaState",
+                  value: updated ? "initial" : "updated",
+                })
+              }
+            >
+              {updated ? "Вернуться к первому прогнозу" : "Две минуты спустя"}
+            </SecondaryAction>
+          </div>
         </div>
         <div
           className={`eta-scene ${updated ? "is-updated" : ""}`}
           data-anchor-scene="elastic-eta"
         >
           <div className="eta-light-leak" aria-hidden="true" />
-          <MicroLabel className="eta-micro">
-            {updated
-              ? "FORECAST UPDATED / +02:00 / LAST DATA 12 SEC AGO"
-              : "SYSTEM TIME / HUMAN PLAN"}
-          </MicroLabel>
           <div className="eta-number">
             <span className="meta">МАШИНА ПРИЕДЕТ ЧЕРЕЗ</span>
             <p aria-live="polite" aria-atomic="true">
@@ -50,7 +44,7 @@ export default function ElasticETA() {
               <span className="eta-current" key={updated ? "nine" : "seven"}>
                 <AfterimageText>{updated ? "9" : "7"}</AfterimageText>
               </span>
-              <span className="system-status">MIN</span>
+              <span className="system-status">МИН</span>
             </p>
           </div>
           <p className="meta eta-elapsed">
@@ -85,11 +79,7 @@ export default function ElasticETA() {
               Обещание в плане человека
             </p>
           </div>
-          <p className="caption eta-gap">
-            {updated
-              ? "В вашем плане осталось 5 минут. Система теперь обещает 9. Действия уже были запланированы."
-              : "Семь минут уже распределены между вашими действиями."}
-          </p>
+          {updated && <p className="caption eta-gap">В вашем плане осталось 5 минут. Новый прогноз — 9.</p>}
           <Disclosure title="Почему изменился прогноз?">
             {copy.etaWhy}
             <p>Числа в этой сцене иллюстративные.</p>

@@ -2,9 +2,10 @@ import { useId, type ReactNode } from "react";
 import EditorialText from "./EditorialText";
 import { editorial, type EditorialPart } from "../content/editorial";
 export { SourceMarker, RichText } from "./TextSources";
+import SceneFigure, { type SceneImage } from "./SceneFigure";
 import { chapters } from "../content/longread";
 import { scenes, acts, sceneAttributes } from "../content/scenes";
-import { MixedTitle } from "./EditorialType";
+import { ChapterTitle } from "./EditorialType";
 import { scrollToElement } from "../hooks/scrollDriver";
 export { chapters } from "../content/longread";
 export function goTo(id: string, smooth = false) {
@@ -36,18 +37,22 @@ export function SectionShell({
   children,
   className = "",
   title = true,
+  image,
+  intro,
 }: {
   zone: number;
   children: ReactNode;
   className?: string;
   title?: boolean;
+  image?: SceneImage;
+  intro?: ReactNode;
 }) {
   const chapter = chapters[zone - 1];
   return (
     <section
       id={chapter.id}
       tabIndex={-1}
-      className={`section scene-surface ${className}`}
+      className={`section scene-surface reading-revision ${className}`}
       {...sceneAttributes(zone)}
       data-scene={chapter.id}
       aria-labelledby={`${chapter.id}-title`}
@@ -57,12 +62,19 @@ export function SectionShell({
         <span>{acts[scenes[zone - 1].act]}</span>
         <span aria-hidden="true">+</span>
       </div>
-      {title && (
+      {image ? (
+        <div className="scene-introduction">
+          <div className="scene-introduction-copy">
+            <h2 id={`${chapter.id}-title`} className="section-title">
+              <ChapterTitle zone={zone} text={chapter.title} />
+            </h2>
+            {intro}
+          </div>
+          <SceneFigure image={image} />
+        </div>
+      ) : title && (
         <h2 id={`${chapter.id}-title`} className="section-title">
-          <MixedTitle
-            text={chapter.title}
-            accent={zone === 6 ? "долгий" : zone === 15 ? "ваши" : undefined}
-          />
+          <ChapterTitle zone={zone} text={chapter.title} />
         </h2>
       )}
       {children}

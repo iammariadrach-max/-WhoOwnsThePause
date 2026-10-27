@@ -6,21 +6,26 @@ import { now } from "../hooks/timing";
 import { copy, chapters } from "../content/longread";
 import { PrimaryAction, SecondaryAction } from "./Actions";
 import { SectionShell, Content, goTo } from "./Shared";
-import OverloadField from "./OverloadField";
-import { MicroLabel, MixedTitle } from "./EditorialType";
+import { MixedTitle } from "./EditorialType";
 import { sceneAttributes } from "../content/scenes";
 import { TypeSedimentTransition } from "./SceneTransitions";
 import IllustratedReading from "./IllustratedReading";
 export function PartTwo() {
+  const question = copy.partTwo.split(" ");
   return (
     <aside
       id="part-two"
-      className="part-transition dark scene-surface"
+      className="part-transition dark scene-surface pause-study--statement reflection-scene reading-revision"
       {...sceneAttributes(9)}
       data-scene="part-two"
     >
+      <ReflectionField variant="edges" />
       <span className="meta">ЧАСТЬ II</span>
-      <p className="section-title"><MixedTitle text={copy.partTwo} /></p>
+      <p className="section-title pause-study-question">
+        <span className="pause-question-opening">{question.slice(0, 3).join(" ")}</span>{" "}
+        <em className="serif-accent">{question.slice(3, 6).join(" ")}</em>{" "}
+        <span className="pause-question-ending">{question.slice(6).join(" ")}</span>
+      </p>
       <span className="meta">КТО РАСПОРЯЖАЕТСЯ ПАУЗОЙ</span>
     </aside>
   );
@@ -30,28 +35,21 @@ export function OverloadedPause() {
   const field = useRef<HTMLDivElement>(null);
   const visible = useInView(field);
   return (
-    <SectionShell zone={9} className="dark overload">
-      <Content part="overloadIntro" />
+    <SectionShell zone={9} className="dark overload" image="overload" intro={<Content part="overloadIntro" />}>
       <div
         data-anchor-scene="type-sediment"
         ref={field}
         className={`overload-field ${state.overloaded ? "is-full" : "is-clear"} ${visible ? "in-view" : ""}`}
       >
-        <OverloadField full={state.overloaded} />
-        {state.overloaded && (
-          <div className="overload-noise" aria-hidden="true">
-            {copy.overloadItems.map((text, i) => (
-              <span key={text} style={{ animationDelay: `${i * 0.35}s` }}>
-                {i === 2 && <i className="spinner" />}
-                {text}
-              </span>
-            ))}
-          </div>
-        )}
+        <p className="caption overload-note">Один процесс.<br />Всё остальное можно убрать.</p>
+        <div className="overload-side" aria-live="polite">
+          <p className="meta">НА ЭКРАНЕ</p>
+          {state.overloaded ? copy.overloadItems.map(text => <p className="caption" key={text}>{text}</p>) : <p className="caption">Только ожидание.</p>}
+        </div>
         <div className="overload-center">
-          <p className="lead" role="status">
-            {state.overloaded ? "Система всё ещё работает." : copy.overloadEnd}
-          </p>
+          <h3 className="status-title" role="status">
+            {state.overloaded ? <>Система всё ещё <em>работает.</em></> : copy.overloadEnd}
+          </h3>
           {state.overloaded ? (
             <SecondaryAction
               onClick={() =>
@@ -76,8 +74,7 @@ export function OptionalPause() {
   const { state, dispatch } = useLongread();
   const status = state.processes.optional.status;
   return (
-    <SectionShell zone={10} className="light optional-pause reflection-scene">
-      <ReflectionField variant="silence" paused={status === "running"} />
+    <SectionShell zone={10} className="light optional-pause reflection-scene" image="rest" intro={
       <div className="optional-copy">
         <Content part="optional" className="silence-copy" />
         <div className="optional-space">
@@ -112,7 +109,8 @@ export function OptionalPause() {
         </div>
         <p className="caption">Или не делать этого.</p>
         <p className="body optional-end">{copy.optionalEnd}</p>
-      </div>
+      </div>}>
+      <ReflectionField variant="silence" paused={status === "running"} />
     </SectionShell>
   );
 }
@@ -124,8 +122,9 @@ export function RestManifesto() {
       zone={11}
       className={`light rest ${released ? "is-released" : ""}`}
     >
-      <MicroLabel className="poster-label">REST / RETURN ON TIME</MicroLabel>
       <Content part="restIntro" />
+      <div className="rest-stage reflection-scene">
+      <ReflectionField variant="cover" />
       <div className="rest-manifesto">
         {copy.restVerbs.map((word, i) => (
           <div key={word}>
@@ -138,6 +137,7 @@ export function RestManifesto() {
             </div>
           </div>
         ))}
+      </div>
       </div>
       <IllustratedReading ref={question} part="rest" className="rest-prose" />
     </SectionShell>

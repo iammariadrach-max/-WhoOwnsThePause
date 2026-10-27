@@ -52,7 +52,7 @@
   scroll-margin-top: 0;
 }
 #root .control-bridge.reflection-scene > .meta { margin: 0 0 64px; }
-#root .control-bridge.reflection-scene > .bridge-heading { max-width: 28ch; grid-column: 1 / 6; }
+#root .control-bridge.reflection-scene > .bridge-heading { max-width: 28ch; grid-column: 1 / 4; }
 #root .control-bridge.reflection-scene > .bridge-interaction { min-height: 160px; }
 #root .control-bridge.reflection-scene > .bridge-caption { margin: 32px 0 0; }
 
@@ -70,12 +70,12 @@
 #root .attention-memory-content { grid-column: 1 / -1; }
 #root .attention-memory .attention-questions {
   display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-template-columns: repeat(8, minmax(0, 1fr));
   gap: 0 var(--layout-gap);
   margin: 0;
 }
-#root .attention-memory .attention-questions > div { grid-column: 1 / 6; min-width: 0; }
-#root .attention-memory .attention-questions > div + div { grid-column: 7 / 12; }
+#root .attention-memory .attention-questions > div { grid-column: 1 / 4; min-width: 0; }
+#root .attention-memory .attention-questions > div + div { grid-column: 5 / 9; }
 #root .attention-memory .choice { margin: 32px 0 0; }
 #root .attention-memory .choice legend { min-height: 3.8em; margin-bottom: 32px; }
 #root .attention-memory .choice-options { gap: 16px 24px; }
@@ -85,7 +85,7 @@
 #root .section > .waiting-choice.reflection-scene {
   grid-column: 1 / -1;
   display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-template-columns: repeat(8, minmax(0, 1fr));
   column-gap: var(--layout-gap);
   row-gap: 0;
   align-items: start;
@@ -95,10 +95,10 @@
   border: 0;
   scroll-margin-top: 0;
 }
-#root .waiting-story { grid-column: 1 / 6; }
+#root .waiting-story { grid-column: 1 / 4; }
 #root .waiting-story > .lead { margin: 0 0 var(--heading-copy-gap); }
 #root .waiting-story > .instruction { margin: 0 0 32px; }
-#root .waiting-controls { grid-column: 8 / -1; min-width: 0; }
+#root .waiting-controls { grid-column: 6 / -1; min-width: 0; }
 #root .waiting-choice .waiting-modes { display: flex; flex-direction: column; gap: 16px; margin: 0 0 40px; }
 #root .waiting-choice .waiting-modes .action {
   width: 100%; justify-content: space-between; padding: 16px 0;
@@ -108,7 +108,7 @@
 #root .waiting-choice .waiting-display { min-height: 120px; gap: 24px; }
 #root .waiting-choice .waiting-display > .system-status { margin: 0; }
 #root .waiting-choice .disclosure { margin-top: 28px; }
-#root .waiting-choice .waiting-conclusion { grid-column: 1 / 6; margin: 72px 0 0; }
+#root .waiting-choice .waiting-conclusion { grid-column: 1 / 4; margin: 72px 0 0; }
 
 /* Silence — a still place beside the reading column, rather than an empty gap
  * between the invitation and its controls. The light settles during the pause. */
@@ -116,13 +116,13 @@
 #root .optional-pause.reflection-scene > .optional-copy {
   grid-column: 1 / -1;
   display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-template-columns: repeat(8, minmax(0, 1fr));
   gap: 0 var(--layout-gap);
   max-width: none;
 }
-#root .optional-copy > .silence-copy { grid-column: 1 / 6; max-width: none; }
+#root .optional-copy > .silence-copy { grid-column: 1 / 4; max-width: none; }
 #root .optional-copy > .optional-space {
-  grid-column: 8 / -1;
+  grid-column: 6 / -1;
   grid-row: 1 / 3;
   align-self: center;
   justify-content: center;
@@ -130,14 +130,14 @@
   gap: 24px;
 }
 #root .optional-copy > .optional-space > p { margin: 0; }
-#root .optional-copy > .actions { grid-column: 1 / 7; gap: 24px 32px; margin: 32px 0 0; }
-#root .optional-copy > .caption { grid-column: 1 / 6; margin: 24px 0 0; }
-#root .optional-copy > .optional-end { grid-column: 8 / -1; grid-row: 3 / 5; margin: 24px 0 0; }
+#root .optional-copy > .actions { grid-column: 1 / 5; gap: 24px 32px; margin: 32px 0 0; }
+#root .optional-copy > .caption { grid-column: 1 / 4; margin: 24px 0 0; }
+#root .optional-copy > .optional-end { grid-column: 6 / -1; grid-row: 3 / 5; margin: 24px 0 0; }
 
 /* Finale — a low, open composition under a receding canopy of light. */
 #root .finale.reflection-scene {
   display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-template-columns: repeat(8, minmax(0, 1fr));
   column-gap: var(--layout-gap);
   grid-template-rows: auto 1fr;
   min-height: 95svh;
@@ -146,19 +146,19 @@
   overflow: visible;
   scroll-margin-top: 0;
 }
-#root .finale.reflection-scene > .timecode-rail { grid-column: 9 / -1; margin: 0; align-self: start; }
-#root .finale.reflection-scene > .finale-copy { grid-column: 2 / 9; align-self: center; margin: 56px 0 0; max-width: none; }
+#root .finale.reflection-scene > .timecode-rail { grid-column: 6 / -1; margin: 0; align-self: start; }
+#root .finale.reflection-scene > .finale-copy { grid-column: 2 / 6; align-self: center; margin: 56px 0 0; max-width: none; }
 #root .finale.reflection-scene .display { max-width: 16ch; margin-top: 32px; }
 #root .finale.reflection-scene .lead { max-width: 27ch; }
 
 @media (max-width: 900px) {
-  #root .control-bridge.reflection-scene > :is(.bridge-heading, .bridge-interaction, .bridge-caption) { grid-column: 1 / 8; }
+  #root .control-bridge.reflection-scene > :is(.bridge-heading, .bridge-interaction, .bridge-caption) { grid-column: 1 / 6; }
   #root .section > .waiting-choice.reflection-scene { row-gap: 56px; }
-  #root .waiting-story { grid-column: 1 / 7; }
-  #root .waiting-controls { grid-column: 8 / -1; }
-  #root .waiting-choice .waiting-conclusion { grid-column: 1 / 8; margin: 0; }
-  #root .optional-copy > .silence-copy { grid-column: 1 / 7; }
-  #root .optional-copy > .actions { grid-column: 1 / 8; }
+  #root .waiting-story { grid-column: 1 / 5; }
+  #root .waiting-controls { grid-column: 6 / -1; }
+  #root .waiting-choice .waiting-conclusion { grid-column: 1 / 6; margin: 0; }
+  #root .optional-copy > .silence-copy { grid-column: 1 / 5; }
+  #root .optional-copy > .actions { grid-column: 1 / 6; }
 }
 @media (max-width: 700px) {
   #root .control-bridge.reflection-scene { min-height: 90svh; padding-block: 96px 120px; }

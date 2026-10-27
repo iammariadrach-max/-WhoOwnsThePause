@@ -4,7 +4,8 @@ import { seconds } from "../hooks/timing";
 import { copy } from "../content/longread";
 import { PrimaryAction, SecondaryAction, SkipAction } from "./Actions";
 import { SectionShell, goTo } from "./Shared";
-import { SerifAccent } from "./EditorialType";
+import ReflectionField from "./ReflectionField";
+import { ChapterTitle } from "./EditorialType";
 export function TimerExperience({
   variant = "first",
   externalResult = false,
@@ -25,7 +26,7 @@ export function TimerExperience({
         <p className="instruction">
           {timer.status === "idle"
             ? variant === "first"
-              ? copy.timerInstruction
+              ? <><span className="desktop-line">Нажмите «Начать», а затем — «Остановить»,</span>{" "}<span className="desktop-line">когда вам покажется, что прошло десять секунд.</span>{" "}<span className="desktop-line">Постарайтесь не считать про себя.</span></>
               : copy.finalTimerInstruction
             : copy.timerRunning}
         </p>
@@ -132,13 +133,14 @@ function PerceptionReadout() {
 export default function PerceptionTimer() {
   return (
     <SectionShell zone={2} className="light perception" title={false}>
+      <ReflectionField variant="threshold" />
       <div className="perception-layout">
         <div className="perception-copy">
           <h2 id="perception-title" className="section-title">
-            Сколько длятся<br /><SerifAccent>десять</SerifAccent> секунд?
+            <ChapterTitle zone={2} text="Сколько длятся десять секунд?" />
           </h2>
           <TimerExperience externalResult />
-          <p className="caption after-note">{copy.timerAfter}</p>
+          <p className="caption after-note"><span className="desktop-line">Здесь важнее другое: как вообще возникает ощущение,</span>{" "}<span className="desktop-line">что десять секунд уже прошли?</span></p>
         </div>
         <PerceptionReadout />
       </div>

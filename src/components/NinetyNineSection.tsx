@@ -1,3 +1,5 @@
+import { useRef } from "react";
+import { useInView } from "../hooks/useMotion";
 import { useLongread } from "../state/LongreadContext";
 import { useElapsedTimer } from "../hooks/useElapsedTimer";
 import { now } from "../hooks/timing";
@@ -8,6 +10,8 @@ import IllustratedReading from "./IllustratedReading";
 import { SerifAccent } from "./EditorialType";
 export default function NinetyNineSection() {
   const { dispatch } = useLongread();
+  const stage = useRef<HTMLDivElement>(null);
+  const visible = useInView(stage, 0.2, true);
   const timer = useElapsedTimer("ninetyNine");
   const t = timer.elapsed;
   const value =
@@ -24,28 +28,41 @@ export default function NinetyNineSection() {
               : 99;
   const checked = timer.status === "complete" || timer.status === "cancelled";
   return (
-    <SectionShell zone={6} className="dark ninety-nine">
-      <p className="lead">
-        Полоса почти заполнена. Кажется, осталось совсем немного.
-      </p>
-      <div className="ninety-stage">
-        <p className="micro-label">WORK COMPLETED / TIME REMAINING</p>
-        <div className="ninety-display">
-          {checked ? (
-            <p className="section-title checking-label">
-              Проверяем
-              <br />
-              <SerifAccent>результат</SerifAccent>
-            </p>
-          ) : (
-            <p className="huge-percent" aria-hidden="true">
-              {value}
-              <span>%</span>
-            </p>
-          )}
-        </div>
-        <div className="ninety-progress" aria-hidden="true">
-          <i style={{ width: `${value}%` }} />
+    <SectionShell zone={6} className="dark ninety-nine ninety-nine--composed">
+      <div
+        ref={stage}
+        className={`ninety-stage pause-study--percent ${visible ? "is-visible" : ""}`}
+      >
+        <p className="caption pause-study-note">
+          Полоса почти заполнена. Кажется, осталось совсем немного.
+        </p>
+        <div className="pause-study-object">
+          <div className="ninety-display">
+            {checked ? (
+              <p className="section-title checking-label">
+                Проверяем
+                <br />
+                <SerifAccent>результат</SerifAccent>
+              </p>
+            ) : (
+              <p className="huge-percent" aria-hidden="true">
+                {value}
+                <span>%</span>
+              </p>
+            )}
+          </div>
+          <div className="ninety-progress" aria-hidden="true">
+            <i style={{ width: `${value}%` }} />
+          </div>
+          <p className="system-status pause-sequence">
+            {timer.status === "running" && t >= 2400
+              ? t >= 4400
+                ? "Проходит секунда. Ещё одна. И ещё."
+                : t >= 3400
+                  ? "Проходит секунда. Ещё одна."
+                  : "Проходит секунда."
+              : "\u00a0"}
+          </p>
         </div>
         <dl className="progress-facts">
           <div>
@@ -57,15 +74,6 @@ export default function NinetyNineSection() {
             <dd className="system-status">неизвестно</dd>
           </div>
         </dl>
-        <p className="system-status pause-sequence">
-          {timer.status === "running" && t >= 2400
-            ? t >= 4400
-              ? "Проходит секунда. Ещё одна. И ещё."
-              : t >= 3400
-                ? "Проходит секунда. Ещё одна."
-                : "Проходит секунда."
-            : "\u00a0"}
-        </p>
         <p className="sr-only" role="status">
           {checked
             ? "Проверяем результат. Оставшееся время неизвестно."
@@ -73,35 +81,35 @@ export default function NinetyNineSection() {
               ? "99 процентов. Ожидание продолжается."
               : "Доля работы не определяет время ожидания."}
         </p>
-      </div>
-      <div className="actions">
-        <PrimaryAction
-          disabled={timer.status === "running"}
-          onClick={() =>
-            dispatch({
-              type: "start",
-              key: "ninetyNine",
-              now: now(),
-              duration: 5400,
-            })
-          }
-        >
-          {timer.status === "idle" ? "Посмотреть ожидание" : "Повторить"}
-        </PrimaryAction>
-        {timer.status === "running" && (
-          <SkipAction
+        <div className="actions">
+          <PrimaryAction
+            disabled={timer.status === "running"}
             onClick={() =>
               dispatch({
-                type: "settle",
+                type: "start",
                 key: "ninetyNine",
-                status: "cancelled",
-                run: timer.run,
+                now: now(),
+                duration: 5400,
               })
             }
           >
-            Пропустить ожидание
-          </SkipAction>
-        )}
+            {timer.status === "idle" ? "Посмотреть ожидание" : "Повторить"}
+          </PrimaryAction>
+          {timer.status === "running" && (
+            <SkipAction
+              onClick={() =>
+                dispatch({
+                  type: "settle",
+                  key: "ninetyNine",
+                  status: "cancelled",
+                  run: timer.run,
+                })
+              }
+            >
+              Пропустить ожидание
+            </SkipAction>
+          )}
+        </div>
       </div>
       <IllustratedReading
         part="ninetyNine"

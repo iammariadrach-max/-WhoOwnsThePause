@@ -9,7 +9,7 @@ import {
   SkipAction,
   DestructiveAction,
 } from "./Actions";
-import { SectionShell, Choice, Disclosure, goTo } from "./Shared";
+import { SectionShell, Choice, goTo } from "./Shared";
 export function LinearProgress({
   process,
 }: {
@@ -70,7 +70,7 @@ function WaitingChoice() {
           ))}
         </div>
         <div className="waiting-display">
-          <p className="system-status" role="status">
+          <p className="system-status waiting-status" role="status">
             {process.status === "complete"
               ? "Готово. Процесс завершён."
               : process.status === "cancelled"
@@ -79,7 +79,7 @@ function WaitingChoice() {
                   ? "Обрабатываем запрос"
                   : "Процесс ещё не запущен."}
           </p>
-          {process.status === "running" &&
+          {(process.status === "running" || process.status === "idle") &&
             (state.secondaryWaitingMode === "animation" ? (
               <div className="functional-orbit" aria-hidden="true">
                 <i />
@@ -92,9 +92,6 @@ function WaitingChoice() {
               </p>
             ))}
         </div>
-        <Disclosure title="Почему нужно ждать?">
-          {copy.waitingExplanation}
-        </Disclosure>
         {process.status === "running" && (
           <DestructiveAction
             onClick={() =>
@@ -110,7 +107,7 @@ function WaitingChoice() {
           </DestructiveAction>
         )}
       </div>
-      <p className="body waiting-conclusion">{copy.waitingEnd}</p>
+
     </div>
   );
 }
@@ -120,15 +117,9 @@ export default function WaitingExperiment() {
   const status = state.comparisonStatus;
   const ready = status === "survey" || status === "skipped";
   return (
-    <SectionShell zone={5} className="dark comparison">
-      <p className="body-large comparison-instruction">
-        {copy.comparisonInstruction}
-      </p>
+    <SectionShell zone={5} className="dark comparison" image="attention" intro={<p className="body-large comparison-instruction">{copy.comparisonInstruction}</p>}>
       <div className="experiment-console">
-        <div className="console-header meta">
-          <span>ОДИН ЗАПРОС / ТРИ ИНТЕРФЕЙСА</span>
-          <span>А — Б — В</span>
-        </div>
+        <ReflectionField variant="comparison" />
         <div
           className="comparison-stage"
           data-variant={status === "running" ? variant : status}

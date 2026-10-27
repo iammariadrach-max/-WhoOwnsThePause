@@ -2,6 +2,7 @@ import type { Ref } from "react";
 import { editorial } from "../content/editorial";
 import EditorialText from "./EditorialText";
 import { DotTexture } from "./StaticTexture";
+import timerDial from "../assets/reading/timer-dial.jpg";
 import attention from "../assets/reading/attention.webp";
 import uncertainty from "../assets/reading/uncertainty.webp";
 import ninetyNine from "../assets/reading/ninety-nine.webp";
@@ -12,7 +13,8 @@ import rest from "../assets/reading/rest.webp";
 import acceleration from "../assets/reading/acceleration.webp";
 import final from "../assets/reading/final.webp";
 
-const illustrations = {
+export const illustrations = {
+  timerDial: {src: timerDial, alt: "Механический таймер у дождливого окна в мягком сумеречном свете.", caption: "ВРЕМЯ ПОМОГАЕТ. ВРЕМЯ ТОРОПИТ."},
   attention: {
     src: attention,
     alt: "Два размытых силуэта беседуют за столиком у окна.",
@@ -65,10 +67,12 @@ export default function IllustratedReading({
   part,
   className = "",
   ref,
+  tail,
 }: {
-  part: keyof typeof illustrations;
+  part: keyof typeof illustrations & keyof typeof editorial;
   className?: string;
   ref?: Ref<HTMLDivElement>;
+  tail?: string;
 }) {
   const illustration = illustrations[part];
   return (
@@ -80,7 +84,7 @@ export default function IllustratedReading({
         </div>
         <figcaption>{illustration.caption}</figcaption>
       </figure>
-      <EditorialText blocks={editorial[part]} className="illustrated-reading-copy" />
+      <EditorialText blocks={tail ? [...editorial[part], { type: "paragraph", text: tail }] : editorial[part]} className="illustrated-reading-copy" />
     </div>
   );
 }

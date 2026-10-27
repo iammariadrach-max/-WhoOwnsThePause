@@ -1,0 +1,334 @@
+/* Local revision of the reading scenes. The cover, introduction and their
+   controls keep their original markup, tokens and selectors. */
+#root .reading-revision {
+  --type-button-font: 500 14px/1.35 "Manrope", sans-serif;
+  --type-button-color: #171a16;
+}
+#root .reading-revision :is(p.lead, legend.lead, .body-large, .instruction, .sticky-phrase, .pullquote, .type-emphasis),
+#root .reading-revision .silence-copy > p:first-child {
+  font: var(--type-body-font) !important;
+  color: var(--type-body-color) !important;
+  letter-spacing: -.012em !important;
+}
+#root .reading-revision .editorial-text > p + p { margin-top: 1.5em; }
+#root .reading-revision :is(.action, .choice-options label > span, .diagnostic-row button, .disclosure summary) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: fit-content;
+  max-width: 100%;
+  min-width: 0;
+  min-height: 40px;
+  height: auto;
+  padding: 10px 18px;
+  margin-inline: 0;
+  border: 1px solid #ece9df;
+  border-radius: 0;
+  background: #ece9df;
+  box-shadow: none;
+  font: var(--type-button-font) !important;
+  color: var(--type-button-color) !important;
+  text-align: center;
+  text-decoration: none;
+  white-space: normal;
+  transition: background-color .25s ease, border-color .25s ease;
+}
+#root .reading-revision .action > [aria-hidden="true"] { display: none; }
+#root .reading-revision :is(.action, .disclosure summary)::after,
+#root .reading-revision :is(.action, .disclosure summary)::before { display: none; }
+#root .reading-revision .disclosure summary { list-style: none; cursor: pointer; }
+#root .reading-revision .disclosure summary::-webkit-details-marker { display: none; }
+#root .reading-revision .disclosure { border: 0; }
+#root .reading-revision .disclosure > .caption { margin-top: 20px; }
+#root .reading-revision :is(.action, .diagnostic-row button, .disclosure summary):hover,
+#root .reading-revision .choice-options label:hover > span {
+  background: #92978a; border-color: #92978a;
+}
+#root .reading-revision :is(.action, .diagnostic-row button, .disclosure summary):focus-visible,
+#root .reading-revision .choice-options input:focus-visible + span {
+  outline: 2px solid #ece9df; outline-offset: 4px;
+}
+#root .reading-revision .action:disabled { opacity: .55; cursor: default; }
+#root .reading-revision .action[aria-pressed="true"],
+#root .reading-revision .choice-options input:checked + span,
+#root .reading-revision .diagnostic-row.is-selected button {
+  background: #a6ac9d; border-color: #a6ac9d; box-shadow: inset 0 -3px 0 #59634e;
+}
+#root .reading-revision .choice-options { gap: 12px; }
+#root .reading-revision .choice-options label { max-width: 100%; }
+#root .reading-revision .actions { gap: 12px; align-items: center; }
+
+/* The same quiet left text / generous right photograph for every invitation. */
+#root .section > .scene-introduction {
+  display: grid;
+  grid-template-columns: repeat(8,minmax(0,1fr));
+  gap: 32px var(--layout-gap);
+  align-items: center;
+  margin: 0 0 72px;
+}
+#root .scene-introduction-copy { grid-column: 1 / 6; min-width: 0; }
+#root .scene-introduction-copy > .section-title {
+  margin: 0 0 36px;
+  font-size: clamp(36px,4.5vw,72px);
+  line-height: 1.08;
+  max-width: 18ch;
+  text-wrap: balance;
+}
+#root .scene-introduction-copy > :is(.lead,.body-copy,.body-large) {
+  margin: 0;
+  max-width: 40ch;
+}
+#root .scene-introduction-copy .editorial-text > p:first-child { margin-top: 0; }
+#root .scene-figure { grid-column: 6 / -1; width: 100%; min-width: 0; margin: 0; }
+#root .scene-image { position: relative; aspect-ratio: 4 / 5; overflow: hidden; background: #151814; }
+#root .scene-image img { display: block; width: 100%; height: 100%; object-fit: cover; filter: grayscale(.65) brightness(.8) contrast(.95) blur(.35px); }
+#root .scene-image .dot-texture { position: absolute; inset: 0; z-index: 1; }
+#root .scene-figure figcaption { margin-top: 16px; max-width: 32ch; }
+
+/* 02 — a tilted ellipse encloses the readout, with the unit tucked beneath it. */
+#root .reading-revision .perception-readout::before {
+  inset: 18% -2%; border-color: #92978a55; transform: rotate(-24deg);
+}
+#root .reading-revision .perception-readout-unit { left: 18%; bottom: 20%; }
+#root .reading-revision .perception-copy .action { width: auto; min-width: 124px; }
+
+/* A luminous lower fold; the shader shares the cover's continuous clock. */
+#root .control-bridge > .reflection-field { inset: 32% -8% -12% 0; opacity: .85; }
+#root .control-bridge.reflection-scene { overflow: clip; }
+#root .control-bridge.reflection-scene > .meta { margin-bottom: 40px; }
+#root .control-bridge.reflection-scene > .bridge-heading { max-width: 38ch; margin-bottom: 28px; }
+#root .control-bridge.reflection-scene > .bridge-interaction { min-height: 0; }
+#root .control-bridge .choice legend { margin-bottom: 24px; }
+
+/* Attention: heading, invitation and two equally sized intervals stay together. */
+#root .attention > .section-title { margin-bottom: 28px; max-width: 20ch; }
+#root .attention > .lead { grid-column: 1 / 5; margin-bottom: 0; }
+#root .attention .attention-tracks { margin-top: 40px; margin-bottom: 64px; gap: 32px; }
+#root .attention .track-heading { align-items: baseline; gap: 16px; margin-bottom: 24px; }
+#root .attention .track-heading h3 { margin: 0; }
+#root .attention .track-events { height: 132px; margin: 0 0 24px; }
+#root .attention .track-events > span { max-width: 20%; padding-left: 8px; }
+#root .attention .attention-track > .meta { margin-top: 20px; }
+#root .attention .attention-track + .attention-track { margin-top: 0; }
+#root .attention .attention-questions .choice { margin-top: 24px; }
+#root .attention .attention-questions .choice legend { min-height: 4.95em; margin-bottom: 24px; }
+#root .attention .attention-questions .choice-options { gap: 12px; }
+#root .attention .attention-memory { min-height: 72svh; padding-block: 72px 140px; }
+#root .attention-memory .reflection-field { inset-block: 12% -8%; }
+
+/* Status scenes borrow the 99% scene's small side note / central statement. */
+#root .reading-revision .message-field {
+  display: grid;
+  grid-template-columns: repeat(8,minmax(0,1fr));
+  gap: 32px var(--layout-gap);
+  align-items: center;
+  min-height: 420px;
+  padding: 48px 0;
+  margin: 0 0 48px;
+  text-align: left;
+}
+#root .message-field .message-status { display: contents; }
+#root .message-field .message-status > .meta { grid-column: 1 / 3; grid-row: 1; margin: 0; }
+#root .message-field .message-status > .section-title {
+  grid-column: 3 / 7; grid-row: 1;
+  width: auto; max-width: none; margin: 0;
+  font-size: clamp(36px,4.8vw,76px); text-align: center; line-height: 1.12;
+}
+#root .message-field .message-status > .body { grid-column: 7 / -1; grid-row: 1; margin: 0; max-width: none; }
+#root .message-field .message-actions { display: contents; }
+#root .message-field .message-actions > .caption { grid-column: 1 / 3; grid-row: 2; margin: 0; max-width: 24ch; }
+#root .message-field .message-actions > .actions { grid-column: 3 / 7; grid-row: 2; justify-content: center; margin: 0; }
+#root .uncertainty > .illustrated-reading { margin-block: 0; }
+#root .uncertainty .illustrated-reading-copy > p { margin-block: 0; }
+#root .uncertainty .illustrated-reading-copy > p + p { margin-top: 1.5em; }
+
+#root .comparison .experiment-console { margin-top: 0; }
+#root .comparison .comparison-stage { min-height: 300px; padding: 44px 0; }
+#root .comparison .comparison-stage > .lead { max-width: 38ch; margin: 0 0 28px; }
+#root .comparison .comparison-stage > .meta { margin-bottom: 24px; }
+#root .comparison .experiment-console > .action { margin-top: 0; }
+#root .section > .waiting-choice.reflection-scene { min-height: 0; padding-block: 72px 96px; margin-top: 64px; }
+#root .waiting-choice .waiting-story { grid-column: 1 / 4; }
+#root .waiting-choice .waiting-story > .lead { margin-bottom: 24px; }
+#root .waiting-choice .waiting-controls { grid-column: 5 / 9; }
+#root .waiting-choice .waiting-modes { gap: 12px; margin-bottom: 24px; }
+#root .reading-revision .waiting-modes .action { width: 100%; padding: 10px 18px; justify-content: center; border: 1px solid #ece9df; background: #ece9df; }
+#root .reading-revision .waiting-modes .action:hover,
+#root .reading-revision .waiting-modes .action[aria-pressed="true"] { background: #a6ac9d; border-color: #a6ac9d; }
+#root .waiting-choice .waiting-display { min-height: 88px; }
+#root .waiting-choice .waiting-conclusion { grid-column: 1 / 4; margin-top: 32px; }
+
+/* The forecast carries only the information needed for the changing plan. */
+#root .pause-study--forecast { row-gap: 48px; }
+#root .pause-study--forecast .eta-intro { grid-column: 1 / 4; align-self: start; }
+#root .pause-study--forecast .eta-scene { grid-column: 5 / -1; }
+#root .pause-study--forecast .eta-intro > .action { margin-top: 28px; }
+#root .pause-study--forecast .eta-track { margin-top: 36px; }
+#root .pause-study--forecast .eta-legend { padding-top: 20px; }
+#root .pause-study--forecast .disclosure { margin-top: 24px; }
+
+/* Two equal outlined squares; the coral remains only in the second readout. */
+#root .reading-revision .countdown-split { gap: 24px; margin: 0 0 28px; }
+#root .reading-revision .countdown-split > div {
+  display: flex; flex-direction: column; justify-content: space-between;
+  aspect-ratio: 1; min-height: 0; padding: clamp(24px,3vw,48px);
+  border: 1px solid #92978a66; background: transparent;
+}
+#root .countdown-split h3.lead { margin: 20px 0 0; font-size: clamp(22px,2.2vw,34px) !important; }
+#root .countdown-split .countdown-display { margin: 32px 0; font-size: clamp(56px,8.5vw,136px); line-height: 1; letter-spacing: -.07em; }
+#root .countdown-split .system-status { margin: 0; min-height: 30px; }
+
+/* A cover-like title with room for the italic line to breathe. */
+#root .part-transition.pause-study--statement { overflow: clip; }
+#root .part-transition.pause-study--statement > .meta:first-of-type { grid-column: 1 / 2; grid-row: 1; margin: 0; }
+#root .part-transition.pause-study--statement > .pause-study-question { row-gap: clamp(16px,2.4vw,40px); }
+#root .part-transition.pause-study--statement > .pause-study-question > :is(.serif-accent,.pause-question-ending) { margin-top: 0; }
+#root .part-transition > .reflection-field--edges {
+  opacity: .34;
+  mask-image: linear-gradient(90deg,#000,transparent 28%,transparent 72%,#000);
+}
+#root .reading-revision .overload-field {
+  display: grid; grid-template-columns: repeat(8,minmax(0,1fr));
+  align-items: center; gap: 32px var(--layout-gap);
+  height: auto; min-height: 440px; margin: 0 0 64px; padding: 40px 0;
+  background: transparent; color: var(--type-body-color); border: 0; overflow: visible;
+}
+#root .overload-field .overload-note { grid-column: 1 / 3; grid-row: 1; max-width: 23ch; margin: 0; }
+#root .overload-field .overload-center {
+  position: static; grid-column: 3 / 7; grid-row: 1;
+  width: auto; min-width: 0; max-width: none; padding: 0; margin: 0;
+  transform: none; text-align: center; background: none; box-shadow: none; color: inherit;
+}
+#root .overload-center .status-title {
+  margin: 0 0 32px; font: 500 clamp(32px,3.6vw,58px)/1.1 var(--font-main); letter-spacing: -.05em;
+}
+#root .overload-center .status-title em { display: block; font: italic 300 1.4em/.9 var(--font-serif); color: #74766e; margin-top: 12px; }
+#root .overload-field .overload-side { grid-column: 8 / -1; grid-row: 1; min-width: 0; }
+#root .overload-side p { margin: 0 0 16px; }
+#root .overload-side > .meta { margin-bottom: 24px; }
+#root .optional-pause .scene-introduction { margin-bottom: 0; }
+#root .optional-pause .optional-copy { display: block; margin: 0; max-width: 42ch; }
+#root .optional-copy > .optional-space { display: block; min-height: 0; padding: 0; margin: 24px 0; }
+#root .optional-copy .optional-space > .lead:empty,
+#root .optional-copy:has(.action--primary:not(:disabled)) .optional-space:has(.lead:empty) { display: none; }
+#root .optional-copy > .actions { display: flex; margin-top: 28px; }
+#root .optional-copy > .caption { margin-top: 16px; }
+#root .optional-copy > .optional-end { margin: 24px 0 0; }
+
+/* An uninterrupted manifesto beside a living field of light. */
+#root .rest > .rest-stage { position: relative; margin: 40px 0 64px; }
+#root .rest-stage > .reflection-field { inset: -10% calc(-1 * var(--reading-edge)) -10% 40%; opacity: .95; mask-image: linear-gradient(90deg,transparent,#000 25%); }
+#root .rest-stage .rest-manifesto { position: relative; width: 58%; margin: 0; }
+#root .rest-manifesto > div { display: block; padding: 32px 0; border: 0; }
+#root .rest-manifesto > div + div { margin-top: 16px; }
+#root .rest-manifesto .section-title { margin: 0 0 28px; }
+#root .rest-manifesto .rest-kpi { max-width: 35ch; }
+#root .rest-manifesto .rest-kpi p { margin: 14px 0 0; }
+#root .responsibility > .section-title { max-width: 21ch; margin-bottom: 48px; }
+#root .responsibility .responsibility-layout { margin-top: 0; row-gap: 40px; }
+#root .responsibility .responsibility-margin { grid-column: 1 / 3; display: block; }
+#root .responsibility .responsibility-layout > .body-copy { grid-column: 4 / 9; }
+#root .responsibility-margin > p { margin: 0 0 20px; }
+#root .responsibility-margin .responsibility-labels { margin-top: 48px; }
+
+/* The answer begins on the same line as the first question, below the object. */
+#root .control .diagnostic { grid-template-rows: auto repeat(5,min-content); min-height: 0; margin: 0 0 32px; padding: 0; }
+#root .control .diagnostic-object { grid-column: 1 / 4; grid-row: 1; padding-bottom: 28px; margin-bottom: 24px; }
+#root .control .diagnostic-row h4 { margin: 0 0 12px; }
+#root .control .diagnostic-row button { display: grid; grid-template-columns: 24px 1fr 16px; width: 100%; min-height: 48px; padding: 12px 16px; }
+#root .control .diagnostic-row button .meta { color: #444e40 !important; }
+#root .control .diagnostic-answer { grid-column: 5 / -1; grid-row: 2 / 7; align-self: start; padding: 0; }
+#root .control .diagnostic-answer > .lead { margin-top: 0; }
+#root .control .diagnostic-answer > .body { margin-top: 24px; }
+#root .final-section > .timer-experience { margin-top: 0; min-height: 0; padding-top: 0; }
+
+#root .longread-footer .footer-title { display: grid; grid-template-columns: repeat(8,minmax(0,1fr)); gap: 12px var(--layout-gap); margin: 100px 0 56px; }
+#root .longread-footer .footer-title > span { grid-column: 1 / -1; font: 500 clamp(30px,8.5vw,140px)/1 var(--font-main); letter-spacing: -.065em; color: #aaa9a3; text-transform: uppercase; }
+#root .longread-footer .footer-title > em { grid-column: 4 / -1; font: italic 300 clamp(72px,13vw,210px)/.9 var(--font-serif); letter-spacing: -.035em; color: #74766e; text-transform: none; }
+#root .longread-footer .footer-bottom { margin-top: 16px; }
+
+@media (max-width: 1000px) {
+  #root .scene-introduction-copy { grid-column: 1 / 6; }
+  #root .scene-figure { grid-column: 6 / -1; }
+  #root .scene-introduction-copy > .section-title { font-size: clamp(32px,4.5vw,50px); }
+  #root .message-field .message-status > .section-title { grid-column: 3 / -1; }
+  #root .message-field .message-status > .body { grid-column: 3 / -1; grid-row: 2; max-width: 40ch; }
+  #root .message-field .message-actions > .actions { grid-column: 3 / -1; grid-row: 3; }
+  #root .message-field .message-actions > .caption { grid-row: 2; }
+  #root .reading-revision .overload-field { grid-template-columns: repeat(8,minmax(0,1fr)); }
+  #root .overload-field .overload-center { grid-column: 3 / 7; }
+  #root .overload-field .overload-side { grid-column: 7 / -1; }
+  #root .waiting-choice .waiting-controls { grid-column: 5 / -1; }
+}
+@media (max-width: 700px) {
+  #root .reading-revision { --type-button-font: 500 13px/1.4 "Manrope",sans-serif; }
+  #root .reading-revision :is(.action,.choice-options label > span,.disclosure summary) { min-height: 40px; padding: 10px 14px; }
+  #root .section > .scene-introduction { grid-template-columns: repeat(4,minmax(0,1fr)); margin-bottom: 48px; row-gap: 36px; }
+  #root .scene-introduction-copy { grid-column: 1 / -1; }
+  #root .scene-introduction-copy > .section-title { font-size: clamp(32px,8.5vw,48px); margin-bottom: 28px; }
+  #root .scene-figure { grid-column: 2 / -1; width: 100%; }
+  #root .scene-image { aspect-ratio: 5 / 4; }
+  #root .scene-figure figcaption { margin-top: 12px; }
+  #root .control-bridge > .reflection-field { inset: 38% -30% -12% -25%; opacity: .7; }
+  #root .attention .attention-tracks { grid-template-columns: 1fr; row-gap: 40px; margin-top: 32px; }
+  #root .attention .attention-tracks > .attention-track { grid-column: 1; }
+  #root .attention .track-events { height: 112px; }
+  #root .attention .attention-memory { min-height: 0; padding-block: 48px 100px; }
+  #root .attention .attention-questions { gap: 56px; }
+  #root .attention .attention-questions .choice legend { min-height: 0; }
+  #root .attention .attention-questions .choice-options { flex-direction: row; }
+  #root .reading-revision .message-field { grid-template-columns: repeat(4,minmax(0,1fr)); min-height: 0; padding-block: 32px; row-gap: 28px; }
+  #root .message-field .message-status > .meta { grid-column: 1 / -1; grid-row: 1; }
+  #root .message-field .message-status > .section-title { grid-column: 1 / -1; grid-row: 2; text-align: left; font-size: 40px; }
+  #root .message-field .message-status > .body { grid-column: 1 / -1; grid-row: 3; }
+  #root .message-field .message-actions > .caption { grid-column: 1 / -1; grid-row: 4; max-width: 32ch; }
+  #root .message-field .message-actions > .actions { grid-column: 1 / -1; grid-row: 5; justify-content: flex-start; }
+  #root .section > .waiting-choice.reflection-scene { grid-template-columns: 1fr; row-gap: 32px; padding-block: 48px 64px; }
+  #root .waiting-choice.reflection-scene > :not(.reflection-field) { grid-column: 1; }
+  #root .waiting-choice .waiting-conclusion { margin-top: 0; }
+  #root .pause-study--forecast .eta-intro, #root .pause-study--forecast .eta-scene { grid-column: 1 / -1; }
+  #root .reading-revision .countdown-split { grid-template-columns: 1fr; gap: 20px; }
+  #root .reading-revision .countdown-split > div { grid-column: 1; padding: 24px; }
+  #root .countdown-split .countdown-display { font-size: clamp(56px,18vw,100px); margin-block: 28px; }
+  #root .countdown-split h3.lead { font-size: 22px !important; }
+  #root .part-transition.pause-study--statement > .pause-study-question { row-gap: 20px; }
+  #root .part-transition.pause-study--statement > .meta:first-of-type { grid-column: 1 / -1; }
+  #root .reading-revision .overload-field { grid-template-columns: 1fr; row-gap: 36px; padding-block: 24px; min-height: 0; }
+  #root .overload-field :is(.overload-note,.overload-center,.overload-side) { grid-column: 1; grid-row: auto; text-align: left; }
+  #root .overload-center .status-title { font-size: 40px; }
+  #root .overload-side { display: flex; flex-wrap: wrap; gap: 12px 24px; }
+  #root .overload-side p { margin: 0; }
+  #root .overload-side > .meta { width: 100%; margin-bottom: 0; }
+  #root .optional-pause .scene-introduction { margin-bottom: 0; }
+  #root .rest-stage .rest-manifesto { width: 75%; }
+  #root .rest-stage > .reflection-field { inset-inline-start: 18%; opacity: .65; }
+  #root .rest-manifesto .section-title { margin-bottom: 24px; }
+  #root .responsibility .responsibility-layout { display: grid; grid-template-columns: 1fr; }
+  #root .responsibility .responsibility-margin, #root .responsibility .responsibility-layout > .body-copy { grid-column: 1; }
+  #root .responsibility .responsibility-margin { display: grid; grid-template-columns: 1fr 1fr; column-gap: 24px; }
+  #root .responsibility-margin > .meta { grid-column: 1 / -1; }
+  #root .responsibility-margin .responsibility-labels { grid-column: 1 / -1; margin-top: 16px; }
+  #root .control .diagnostic { display: block; }
+  #root .control .diagnostic-row { display: block; }
+  #root .control .diagnostic-answer { margin: 24px 0 32px; }
+  #root .longread-footer .footer-title { margin-block: 64px 40px; }
+  #root .longread-footer .footer-title > span { font-size: 8.2vw; }
+  #root .longread-footer .footer-title > em { grid-column: 3 / -1; font-size: 24vw; }
+}
+/* Optical cleanup after checking the narrow and wide layouts. */
+#root .reading-revision .perception-readout::before { inset: 23% 3%; }
+#root .reading-revision .reflection-field:is(.reflection-field--cover,.reflection-field--edges) { background: none; }
+#root :is(.rest-stage,.part-transition) > .reflection-field canvas {
+  mask-image: linear-gradient(transparent,#000 18%,#000 82%,transparent);
+}
+#root .rest-stage .rest-manifesto > div > .section-title { margin-bottom: 28px; }
+#root .rest-stage .rest-manifesto .rest-kpi { margin: 0; transform: none; }
+#root .optional-copy > .actions { align-items: flex-start; }
+@media (max-width: 700px) {
+  #root .reading-revision h2.section-title { font-size: clamp(32px,8.5vw,48px); line-height: 1.1; }
+  #root .rest-stage .rest-manifesto .section-title { font-size: clamp(36px,10vw,56px); line-height: 1.15; }
+}
+#root .reading-revision .perception-readout-unit { left: 20%; }
+#root .reading-revision .overload-field { justify-items: stretch; isolation: auto; z-index: 2; }
+#root .reading-revision .overload-field::after { display: none; }

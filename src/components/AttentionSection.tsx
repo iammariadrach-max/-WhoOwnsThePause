@@ -8,6 +8,7 @@ export default function AttentionSection() {
   const [answers, setAnswers] = useState<(string | null)[]>([null, null]);
   return (
     <SectionShell zone={3} className="dark attention">
+      <ReflectionField variant="attention" />
       <p className="lead">Представьте две ситуации.</p>
       <div className="attention-tracks">
         {["Вы разговариваете с человеком", "Вы ждёте ответа интерфейса"].map(

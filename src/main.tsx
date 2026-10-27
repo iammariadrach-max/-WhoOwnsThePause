@@ -1,5 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import "@fontsource/manrope/cyrillic-400.css";
+import "@fontsource/manrope/latin-400.css";
 import "@fontsource/manrope/cyrillic-500.css";
 import "@fontsource/manrope/latin-500.css";
 import "@fontsource/ibm-plex-mono/cyrillic-400.css";
@@ -15,6 +17,10 @@ import "./styles/reference-cover.css";
 import "./styles/reading-grid.css";
 import "./styles/reflection-scenes.css";
 import "./styles/typography.css";
+import "./styles/composed-scenes.css";
+import "./styles/reading-revision.css";
+import "./styles/mockup.css";
+import "./styles/revision-27.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

@@ -6,8 +6,7 @@ import { MixedTitle } from "./EditorialType";
 export default function ControlDiagnostic() {
   const { state, dispatch } = useLongread();
   return (
-    <SectionShell zone={14} className="light control">
-      <Content part="controlIntro" />
+    <SectionShell zone={14} className="light control" image="eta" intro={<Content part="controlIntro" />}>
       <div className="diagnostic">
         <div className="diagnostic-object">
           <span className="meta">ОДИН ОБЪЕКТ / ПЯТЬ ВОПРОСОВ</span>
@@ -102,7 +101,6 @@ export default function ControlDiagnostic() {
               : ""}
         </p>
       </div>
-      <Content part="control" className="reading-offset" />
     </SectionShell>
   );
 }

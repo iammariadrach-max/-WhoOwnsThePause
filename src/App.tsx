@@ -1,3 +1,4 @@
+import TypographyFlow from "./components/TypographyFlow";
 import Navigation from "./components/Navigation";
 import HeroPause from "./components/HeroPause";
 import PerceptionTimer from "./components/PerceptionTimer";
@@ -33,6 +34,7 @@ export default function App() {
         <StyleGuide />
       ) : (
         <>
+          <TypographyFlow />
           <AtmosphereLayer />
           <ReadingScroll />
           <Navigation />

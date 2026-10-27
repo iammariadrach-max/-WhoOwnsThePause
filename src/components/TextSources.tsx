@@ -16,6 +16,8 @@ export function SourceMarker({ numbers }: { numbers: string }) {
             href={`#source-${number}`}
             aria-label={`Источник ${number}`}
             onClick={() => {
+              const sources = document.querySelector<HTMLDetailsElement>("details#sources");
+              if (sources) sources.open = true;
               const back = document.querySelector<HTMLAnchorElement>(
                 `#source-${number} .source-back`,
               );

@@ -42,9 +42,11 @@ export function useProgress(key: ProcessKey) {
         ref.current.style.setProperty(
           "--progress",
           String(
-            process.status === "complete"
-              ? 1
-              : progress(process.startedAt, process.duration, now()),
+            process.status === "idle"
+              ? 0
+              : process.status === "complete"
+                ? 1
+                : progress(process.startedAt, process.duration, now()),
           ),
         );
       if (process.status === "running" && visible && !document.hidden)
