@@ -39,6 +39,25 @@ export default function LongreadFooter() {
         <p className="meta">2026</p>
       </div>
       </div>
+      <section className="course-webring" aria-labelledby="webring-title">
+        <h2 id="webring-title">Веб-ринг</h2>
+        <nav className="course-webring__nav" aria-label="Веб-ринг проектов">
+          <a
+            target="_top"
+            href="https://annutka999.github.io/perception-of-time/"
+            rel="prev"
+            >← Всё быстрее — Анна Космачёва</a
+          >
+          <a
+            target="_top"
+            href="https://docs.google.com/spreadsheets/d/1moFgJsWmO2xyTYsfRRvhG63S1ru9MhJKDSAw2pOUqyw/htmlview?gid=93859566&amp;range=A1:E35"
+            >Все проекты</a
+          >
+          <a target="_top" href="https://karina156.github.io/ill/" rel="next"
+            >Мы здесь не одни — Карина Манукян →</a
+          >
+        </nav>
+      </section>
     </footer>
   );
 }
