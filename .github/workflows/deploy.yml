@@ -15,7 +15,7 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 25
     steps:
       - name: Check out repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
@@ -29,8 +29,10 @@ jobs:
       - name: Lint, typecheck and unit tests
         run: npm run lint && npm run typecheck && npm run test:unit
       - name: Install browser for checks
+        timeout-minutes: 12
         run: npx playwright install --with-deps chromium
       - name: Browser checks
+        timeout-minutes: 10
         run: npm run test:e2e
       - name: Build website
         run: npm run build -- --base=/-WhoOwnsThePause/
