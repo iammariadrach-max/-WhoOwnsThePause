@@ -78,8 +78,19 @@ test("all fifteen zones, responsive layouts, navigation, sources and reload", as
     await page.locator(".menu-button").click();
     await page.locator('#contents a[href="#opening"]').press("Enter");
     await expect.poll(() => page.evaluate(() => scrollY)).toBe(0);
+    const overflow = await page.evaluate(() => {
+      const width = document.documentElement.clientWidth;
+      return [...document.querySelectorAll("main *, footer *")]
+        .filter((element) => element.getBoundingClientRect().right > width + 1)
+        .map((element) => ({
+          tag: element.tagName,
+          class: element.className,
+          right: Math.round(element.getBoundingClientRect().right),
+        }));
+    });
     expect(
       await page.evaluate(() => document.documentElement.scrollWidth),
+      `Overflow at ${width}px: ${JSON.stringify(overflow)}`,
     ).toBeLessThanOrEqual(width);
     const button = await page.locator(".cover-motion").boundingBox();
     expect(button!.y + button!.height).toBeLessThan(height);
@@ -163,6 +174,7 @@ test("A/B/C each use ten seconds, pause between variants, choices persist", asyn
   page,
 }) => {
   await page.clock.install({ time: new Date("2026-10-19T09:00:00Z") });
+  await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/#comparison");
   await page.clock.pauseAt(new Date("2026-10-19T10:00:00Z"));
   const section = page.locator("#comparison");
@@ -185,7 +197,8 @@ test("A/B/C each use ten seconds, pause between variants, choices persist", asyn
       i === 2 ? "survey" : "between",
     );
     if (i < 2) {
-      await page.clock.runFor(60000);
+      // Only persistence during idle time matters here, not 3,600 animation frames.
+      await page.clock.fastForward(60000);
       await expect(page.locator(".comparison-stage")).toHaveAttribute(
         "data-variant",
         "between",
@@ -224,7 +237,7 @@ test("background processing survives scrolling, mode changes and reload; cancell
   await page.clock.install({ time: new Date("2026-10-19T09:00:00Z") });
   await page.goto("/");
   await page.clock.pauseAt(new Date("2026-10-19T10:00:00Z"));
-  await page.getByRole("button", { name: "Добавить ясность" }).click();
+  await page.locator("#uncertainty").getByRole("button", { name: "Обработать", exact: true }).click();
   await page
     .locator("#uncertainty")
     .getByRole("button", { name: "Читать дальше" })
@@ -233,7 +246,7 @@ test("background processing survives scrolling, mode changes and reload; cancell
   await page.clock.fastForward(11000);
   await expect(page.locator(".global-status")).toContainText("Файл готов.");
   await page.reload();
-  await expect(page.locator("#uncertainty")).toContainText("Файл готов.");
+  await expect(page.locator("#uncertainty .message-status .section-title")).toHaveText(/Файл\s*готов/);
   await page
     .getByRole("button", { name: "Запустить процесс", exact: true })
     .click();
@@ -295,7 +308,7 @@ test("99% is work, countdown consequences differ, voluntary pause never traps sc
   await expect(page).toHaveURL(/#rest$/);
 });
 
-test("ETA, two models, mobile accordion, reduced motion and final page pause", async ({
+test("ETA, mobile accordion, reduced motion, finale and collapsible sources", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
@@ -313,12 +326,18 @@ test("ETA, two models, mobile accordion, reduced motion and final page pause", a
   );
   await page.getByRole("button", { name: "Убрать всё" }).click();
   await expect(page.locator(".overload-noise")).toHaveCount(0);
-  await page
-    .getByRole("button", { name: "Поставить страницу на паузу" })
-    .click();
-  await expect(page.locator(".page-pause")).toContainText(
-    "Эту паузу выбрали вы.",
-  );
+  await expect(page.getByRole("button", { name: "Поставить страницу на паузу" })).toHaveCount(0);
+  await page.getByRole("button", { name: "Закончить", exact: true }).click();
+  await expect(page.locator("#finale")).toHaveAttribute("data-final-status", "revealed");
+  await expect(page.locator("html")).toHaveAttribute("data-motion", "paused");
+  const sources = page.locator("#sources");
+  await expect(sources).toHaveAttribute("open", "");
+  await sources.locator("summary").click();
+  await expect(sources).not.toHaveAttribute("open");
+  await expect(page.locator("#source-1")).toBeHidden();
+  await page.getByRole("link", { name: "Источник 1", exact: true }).click();
+  await expect(sources).toHaveAttribute("open", "");
+  await expect(page.locator("#source-1")).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(
     390,
   );

@@ -191,3 +191,20 @@
   #root .control-bridge .scene-figure { grid-column:1 / -1; }
   #root .footer-signature .footer-bottom .meta { font-size:8px !important; }
 }
+
+/* Grid items must shrink inside their assigned columns, including long source
+   titles and nonbreaking typographic groups. Do not hide page overflow. */
+#root :is(.reading-revision, .intro-body, .sources) :is(p, h2, h3, h4, fieldset, figure, .fork-model, .source-list li > div) {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+#root .sources .source-list li { grid-template-columns: 48px minmax(0,1fr); }
+#root .control-bridge .choice-options { max-width: 100%; }
+#root .fork-scene > .fork-models { grid-template-columns: repeat(2,minmax(0,1fr)); }
+@media(max-width:1000px) {
+  /* Two diagrams no longer fit side by side inside half a tablet page. */
+  #root .fork-scene > .fork-models { grid-template-columns: minmax(0,1fr); }
+  #root .fork-scene > .fork-stream { min-width: 0; max-width: 100%; }
+  #root .control-bridge .bridge-heading .desktop-line { display: inline; }
+  #root .pause-study--forecast .eta-stop span { white-space: normal; }
+}
