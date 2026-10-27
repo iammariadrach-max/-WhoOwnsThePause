@@ -1,6 +1,15 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { advanceCover, advanceCoverFrame, coverShouldStop, BRAKE_SECONDS } from '../src/hooks/coverMotion.ts';
+test('finishing a partial ramp reaches the exact target without floating-point overshoot', () => {
+  for (const stopped of [true, false]) {
+    for (const speed of [0.0035, 0.1, 0.3, 0.7, 0.9999]) {
+      const end = advanceCover({phase: 42, speed}, 2, stopped);
+      assert.equal(end.speed, stopped ? 0 : 1);
+      if (stopped) assert.deepEqual(advanceCover(end, 2, true), end);
+    }
+  }
+});
 test('button braking reaches exact rest in 1.25 seconds, without resetting phase', () => {
   const half = advanceCover({phase: 42, speed: 1}, BRAKE_SECONDS/2, true);
   assert.equal(half.speed, .5);
