@@ -50,10 +50,10 @@ export default function LongreadFooter() {
           >
           <a
             target="_top"
-            href="https://docs.google.com/spreadsheets/d/1moFgJsWmO2xyTYsfRRvhG63S1ru9MhJKDSAw2pOUqyw/htmlview?gid=93859566&amp;range=A1:E35"
+            href="https://conclaveobscurum.ru/soyalice/"
             >Все проекты</a
           >
-          <a target="_top" href="https://karina156.github.io/ill/" rel="next"
+          <a target="_top" href="https://karina156.github.io/long_1/" rel="next"
             >Мы здесь не одни — Карина Манукян →</a
           >
         </nav>
